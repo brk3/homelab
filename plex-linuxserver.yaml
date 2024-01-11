@@ -1,6 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: plex
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: plex
   name: plex-server
 spec:
   replicas: 1
@@ -33,15 +40,15 @@ spec:
             value: "Etc/UTC"
           - name: VERSION
             value: "docker"
-          - name: PLEX_CLAIM
-            value: "claim-yFD9n_vKmxkeKrxpzJ4V"
+          #- name: PLEX_CLAIM
+          # value: "claim-yFD9n_vKmxkeKrxpzJ4V"
       volumes:
       - name: plex-config
         hostPath:
           path: /home/pbourke/media/plex/config
       - name: plex-tv
         hostPath:
-          path: /home/pbourke/media/plex/data
+          path: /home/pbourke/torrents
       - name: plex-movies
         hostPath:
           path: /home/pbourke/media/plex/transcode
@@ -50,6 +57,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: plex-ingress
+  namespace: plex
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
@@ -68,6 +76,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: plex
   name: plex-server
 spec:
   type: NodePort
