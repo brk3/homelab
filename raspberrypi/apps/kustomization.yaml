@@ -7,3 +7,4 @@ resources:
   - argocd.yaml
   - plex.yaml
   - exatorrent.yaml
+  - apps.yaml
