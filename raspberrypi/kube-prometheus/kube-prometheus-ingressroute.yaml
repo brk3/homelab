@@ -1,0 +1,27 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kube-prometheus
+  namespace: monitoring
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`grafana.echologic.xyz`)
+    priority: 10                    
+    services:                      
+    - name: grafana
+      port: 3000
+  - kind: Rule
+    match: Host(`prometheus.echologic.xyz`)
+    priority: 11                  
+    services:                    
+    - name: prometheus-k8s
+      port: 9090
+  - kind: Rule
+    match: Host(`alertmanager.echologic.xyz`)
+    priority: 12                  
+    services:                    
+    - name: alertmanager-main
+      port: 9093
