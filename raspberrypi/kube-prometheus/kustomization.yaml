@@ -4,4 +4,4 @@ metadata:
   name: kube-prometheus
 namespace: monitoring
 resources:
-  - https://github.com/prometheus-operator/kube-prometheus
+  - kube-prometheus-ingressroute.yaml

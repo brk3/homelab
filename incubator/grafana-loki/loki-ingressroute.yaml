@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  labels:
+    app.kubernetes.io/instance: argocd
+  name: loki-ingressroute
+  namespace: loki
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`loki.echologic.xyz`)
+    priority: 10
+    services:
+    - name: loki
+      port: 3100
