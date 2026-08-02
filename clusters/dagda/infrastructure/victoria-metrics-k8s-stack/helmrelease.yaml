@@ -19,3 +19,23 @@ spec:
       persistence:
         enabled: true
         size: 2Gi
+    # KubeVirt's node-labeller stamps ~400 cpu-feature/machine-type labels
+    # (*_kubevirt_io_*) onto every node. The chart's default kubelet
+    # VMNodeScrape copies all node labels onto every scraped series via
+    # labelmap, which pushes cadvisor/kubelet series past VictoriaMetrics'
+    # default 40-label-per-series limit, so they get silently dropped -
+    # this is why kubelet/cadvisor-derived dashboards (e.g. Compute
+    # Resources / Pod) show "No Data" despite scraping showing healthy.
+    kubelet:
+      vmScrape:
+        spec:
+          metricRelabelConfigs:
+            - action: labeldrop
+              regex: (uid)
+            - action: labeldrop
+              regex: (id|name)
+            - action: drop
+              source_labels: [__name__]
+              regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+            - action: labeldrop
+              regex: .*kubevirt_io.*
