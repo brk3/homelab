@@ -10,4 +10,3 @@ These are created out-of-band (`kubectl create secret ...`) and intentionally ex
 
 - `flux-system` (namespace `flux-system`, keys `username`/`password`) — GitHub credentials Flux uses to pull this repo. Recreate via `flux bootstrap github --owner=brk3 --repository=homelab --path=clusters/dagda --token-auth` (prompts for a GitHub PAT), or manually with `kubectl create secret generic flux-system -n flux-system --from-literal=username=git --from-literal=password=<PAT>`.
 - `cloudflare-api-token-secret` (namespace `cert-manager`, key `api-token`) — Cloudflare API token used by the DNS-01 solver in the Let's Encrypt `ClusterIssuer`s. Recreate with `kubectl create secret generic cloudflare-api-token-secret -n cert-manager --from-literal=api-token=<token>`.
-- `homepage-secrets` (namespace `homepage`, not yet created) — will need the same treatment once the homepage app is committed: Plex token + Sonarr/Radarr/Prowlarr API keys + qBittorrent credentials.
