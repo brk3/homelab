@@ -25,6 +25,12 @@ spec:
               value: "Etc/UTC"
             - name: WEBUI_PORT
               value: "8080"
+          resources:
+            requests:
+              cpu: 150m
+              memory: 256Mi
+            limits:
+              memory: 2Gi
           ports:
             - name: webui
               containerPort: 8080

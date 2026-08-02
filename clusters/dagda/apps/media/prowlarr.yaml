@@ -23,6 +23,12 @@ spec:
               value: "1000"
             - name: TZ
               value: "Etc/UTC"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 512Mi
           ports:
             - name: webui
               containerPort: 9696

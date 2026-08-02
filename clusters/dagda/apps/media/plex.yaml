@@ -1,21 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: radarr
+  name: plex
   namespace: media
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: radarr
+      app: plex
   template:
     metadata:
       labels:
-        app: radarr
+        app: plex
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       containers:
-        - name: radarr
-          image: lscr.io/linuxserver/radarr:latest
+        - name: plex
+          image: lscr.io/linuxserver/plex:latest
           env:
             - name: PUID
               value: "1000"
@@ -23,39 +27,31 @@ spec:
               value: "1000"
             - name: TZ
               value: "Etc/UTC"
+            - name: VERSION
+              value: "docker"
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 250m
+              memory: 512Mi
             limits:
-              memory: 1Gi
-          ports:
-            - name: webui
-              containerPort: 7878
+              memory: 4Gi
           volumeMounts:
             - name: config
               mountPath: /config
             - name: media
               mountPath: /data
+            - name: dri
+              mountPath: /dev/dri
       volumes:
         - name: config
           hostPath:
-            path: /mnt/k3s-data/appdata/radarr
+            path: /mnt/k3s-data/appdata/plex
             type: Directory
         - name: media
           hostPath:
             path: /mnt/media
             type: Directory
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: radarr
-  namespace: media
-spec:
-  selector:
-    app: radarr
-  ports:
-    - name: webui
-      port: 7878
-      targetPort: 7878
+        - name: dri
+          hostPath:
+            path: /dev/dri
+            type: Directory
