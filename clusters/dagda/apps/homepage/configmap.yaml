@@ -36,6 +36,9 @@ data:
         - Radarr:
             href: https://radarr.aiectomy.xyz
             icon: radarr.png
+        - Bazarr:
+            href: https://bazarr.aiectomy.xyz
+            icon: bazarr.png
         - Prowlarr:
             href: https://prowlarr.aiectomy.xyz
             icon: prowlarr.png

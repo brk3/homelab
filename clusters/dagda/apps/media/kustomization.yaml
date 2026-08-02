@@ -6,6 +6,7 @@ resources:
   - prowlarr.yaml
   - sonarr.yaml
   - radarr.yaml
+  - bazarr.yaml
   - plex.yaml
   - vpa.yaml
   - httproutes.yaml
