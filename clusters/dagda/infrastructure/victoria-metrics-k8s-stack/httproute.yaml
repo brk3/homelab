@@ -11,5 +11,5 @@ spec:
     - grafana.aiectomy.xyz
   rules:
     - backendRefs:
-        - name: victoria-metrics-k8s-stack-grafana
+        - name: monitoring-victoria-metrics-k8s-stack-grafana
           port: 80
