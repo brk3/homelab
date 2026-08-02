@@ -27,19 +27,6 @@ spec:
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
-  name: flaresolverr
-  namespace: media
-spec:
-  targetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: flaresolverr
-  updatePolicy:
-    updateMode: "Off"
----
-apiVersion: autoscaling.k8s.io/v1
-kind: VerticalPodAutoscaler
-metadata:
   name: sonarr
   namespace: media
 spec:
