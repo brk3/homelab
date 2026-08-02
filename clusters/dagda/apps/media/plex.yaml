@@ -55,3 +55,17 @@ spec:
           hostPath:
             path: /dev/dri
             type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: plex
+  namespace: media
+spec:
+  selector:
+    app: plex
+  ports:
+    - name: webui
+      port: 32400
+      targetPort: 32400
+

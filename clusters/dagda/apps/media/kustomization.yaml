@@ -7,3 +7,4 @@ resources:
   - sonarr.yaml
   - radarr.yaml
   - plex.yaml
+  - httproutes.yaml
