@@ -1,1 +1,13 @@
 # homelab
+
+## Notes
+
+- qBittorrent's save path / incomplete-download staging dir (Settings > Downloads) is set manually via its Web UI, not managed in git — the app rewrites its own config on startup, so file-based overrides get silently clobbered.
+
+## Disaster recovery: secrets not in git
+
+These are created out-of-band (`kubectl create secret ...`) and intentionally excluded from git. If the `dagda` node/cluster is lost, they must be recreated manually before Flux can fully reconcile:
+
+- `flux-system` (namespace `flux-system`, keys `username`/`password`) — GitHub credentials Flux uses to pull this repo. Recreate via `flux bootstrap github --owner=brk3 --repository=homelab --path=clusters/dagda --token-auth` (prompts for a GitHub PAT), or manually with `kubectl create secret generic flux-system -n flux-system --from-literal=username=git --from-literal=password=<PAT>`.
+- `cloudflare-api-token-secret` (namespace `cert-manager`, key `api-token`) — Cloudflare API token used by the DNS-01 solver in the Let's Encrypt `ClusterIssuer`s. Recreate with `kubectl create secret generic cloudflare-api-token-secret -n cert-manager --from-literal=api-token=<token>`.
+- `homepage-secrets` (namespace `homepage`, not yet created) — will need the same treatment once the homepage app is committed: Plex token + Sonarr/Radarr/Prowlarr API keys + qBittorrent credentials.

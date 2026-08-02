@@ -5,6 +5,8 @@ metadata:
   namespace: media
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: qbittorrent
@@ -13,9 +15,19 @@ spec:
       labels:
         app: qbittorrent
     spec:
+      initContainers:
+        - name: init-download-dirs
+          image: busybox:1.38.0@sha256:dc2d74b28e4cf8984fa52af1f39bc7c3d9c73760b41a74d629f5d11b1ab28616
+          command:
+            - sh
+            - -c
+            - mkdir -p /data/downloads/incomplete /data/downloads/complete && chown -R 1000:1000 /data/downloads
+          volumeMounts:
+            - name: media
+              mountPath: /data
       containers:
         - name: qbittorrent
-          image: lscr.io/linuxserver/qbittorrent:latest
+          image: lscr.io/linuxserver/qbittorrent:5.2.3@sha256:b024436f8ca665d16d9a997d26fd27fdf867ee5566ba09f32764e7b2976d3e02
           env:
             - name: PUID
               value: "1000"
@@ -40,6 +52,19 @@ spec:
             - name: torrent-udp
               containerPort: 6881
               protocol: UDP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: webui
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: webui
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
           volumeMounts:
             - name: config
               mountPath: /config
