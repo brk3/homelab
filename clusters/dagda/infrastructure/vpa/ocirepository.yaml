@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: vpa
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: oci://ghcr.io/stevehipwell/helm-charts/vertical-pod-autoscaler
+  ref:
+    tag: 1.12.1
