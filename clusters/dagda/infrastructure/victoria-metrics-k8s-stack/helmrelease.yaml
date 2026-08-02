@@ -12,6 +12,12 @@ spec:
     kind: OCIRepository
     name: victoria-metrics-k8s-stack
   values:
+    # Alertmanager config (routes + Telegram receiver + bot token/chat ID)
+    # lives in the "alertmanager-telegram-config" Secret, created directly
+    # in-cluster rather than here, so credentials never land in git.
+    alertmanager:
+      spec:
+        configSecret: alertmanager-telegram-config
     vmsingle:
       spec:
         retentionPeriod: "3"
