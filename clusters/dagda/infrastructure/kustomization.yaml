@@ -5,3 +5,4 @@ resources:
   - cert-manager
   - kubevirt
   - vpa
+  - victoria-metrics-k8s-stack
