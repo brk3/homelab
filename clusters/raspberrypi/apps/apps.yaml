@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: exatorrent
+  name: apps
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: raspberrypi/exatorrent
+    path: clusters/raspberrypi/apps
     repoURL: https://github.com/brk3/homelab
     targetRevision: HEAD
