@@ -1,0 +1,49 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: ubuntu-test
+  namespace: vms
+spec:
+  # Manual: Flux owns the VM definition, `virtctl start/stop` owns its power state.
+  # Always would make Flux fight virtctl and restart the VM every reconcile.
+  runStrategy: Manual
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: ubuntu-test
+    spec:
+      domain:
+        cpu:
+          cores: 2
+        memory:
+          guest: 2Gi
+        devices:
+          disks:
+            - name: rootdisk
+              disk:
+                bus: virtio
+            - name: cloudinitdisk
+              disk:
+                bus: virtio
+          interfaces:
+            - name: default
+              masquerade: {}
+          # Passes host entropy through; cloud images can stall on first boot without it.
+          rng: {}
+      networks:
+        - name: default
+          pod: {}
+      volumes:
+        # containerDisk, not a DataVolume: CDI isn't installed. Writes go to a
+        # copy-on-write overlay on dagda's local disk and are LOST on every restart.
+        - name: rootdisk
+          containerDisk:
+            image: quay.io/containerdisks/ubuntu:24.04
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            # SSH key only, no password — this repo is public. Serial console login
+            # therefore won't work; use `virtctl ssh`.
+            userData: |
+              #cloud-config
+              ssh_authorized_keys:
+                - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINryKTMSY6OuMY41HsZ3InkL0bJMHzHFLuqWvGh4xe+K pbourke@Pauls-Air.station
