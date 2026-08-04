@@ -21,10 +21,33 @@ spec:
     vmsingle:
       spec:
         retentionPeriod: "3"
+    # VictoriaLogs. vlagent's built-in k8sCollector (on by default) tails pod
+    # logs on every node and remote-writes them to vlsingle, so no separate
+    # Vector/fluent-bit DaemonSet is needed.
+    vlsingle:
+      enabled: true
+      spec:
+        extraArgs:
+          retention.maxDiskSpaceUsageBytes: 4GiB
+        storage:
+          resources:
+            requests:
+              storage: 5Gi
+      route:
+        enabled: true
+        parentRefs:
+          - name: eg
+            namespace: envoy-gateway-system
+        hostnames:
+          - logs.aiectomy.xyz
+    vlagent:
+      enabled: true
     grafana:
       persistence:
         enabled: true
         size: 2Gi
+      plugins:
+        - victoriametrics-logs-datasource
     # KubeVirt's node-labeller stamps ~400 cpu-feature/machine-type labels
     # (*_kubevirt_io_*) onto every node. The chart's default kubelet
     # VMNodeScrape copies all node labels onto every scraped series via
