@@ -13,5 +13,5 @@ spec:
     name: vpa
   values:
     # Full deployment (recommender + updater + admission controller) so
-    # VPAs with updateMode: Auto can evict/restart pods to apply sizing.
+    # VPAs with updateMode: Recreate can evict/restart pods to apply sizing.
     recommenderOnly: false
