@@ -12,7 +12,6 @@ spec:
     kind: OCIRepository
     name: vpa
   values:
-    # Recommender-only: generates sizing recommendations without an
-    # updater/admission-controller, so pods are never evicted/restarted
-    # to apply them. Recommendations are read via `kubectl describe vpa`.
-    recommenderOnly: true
+    # Full deployment (recommender + updater + admission controller) so
+    # VPAs with updateMode: Auto can evict/restart pods to apply sizing.
+    recommenderOnly: false

@@ -1,0 +1,30 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: pod-resource-alerts
+  namespace: monitoring
+spec:
+  groups:
+    - name: pod-resources
+      rules:
+        - alert: PodOOMKilled
+          expr: |
+            (kube_pod_container_status_last_terminated_reason{reason="OOMKilled"} == 1)
+            and
+            changes(kube_pod_container_status_restarts_total[15m]) > 0
+          for: 0m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Container {{ $labels.container }} in {{ $labels.namespace }}/{{ $labels.pod }} was OOMKilled"
+        - alert: PodMemoryNearRequest
+          expr: |
+            container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!=""}
+            / on(namespace, pod, container)
+            kube_pod_container_resource_requests{resource="memory"}
+            > 0.9
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Container {{ $labels.container }} in {{ $labels.namespace }}/{{ $labels.pod }} is using >90% of its memory request"

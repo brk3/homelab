@@ -18,9 +18,21 @@ spec:
     alertmanager:
       spec:
         configSecret: alertmanager-telegram-config
+        resources:
+          requests:
+            cpu: 30m
+            memory: 64Mi
+          limits:
+            memory: 256Mi
     vmsingle:
       spec:
         retentionPeriod: "3"
+        resources:
+          requests:
+            cpu: 150m
+            memory: 1200Mi
+          limits:
+            memory: 2400Mi
     # VictoriaLogs. vlagent's built-in k8sCollector (on by default) tails pod
     # logs on every node and remote-writes them to vlsingle, so no separate
     # Vector/fluent-bit DaemonSet is needed.
@@ -33,6 +45,12 @@ spec:
           resources:
             requests:
               storage: 5Gi
+        resources:
+          requests:
+            cpu: 150m
+            memory: 500Mi
+          limits:
+            memory: 1500Mi
       route:
         enabled: true
         parentRefs:
@@ -42,12 +60,78 @@ spec:
           - logs.aiectomy.xyz
     vlagent:
       enabled: true
+      spec:
+        resources:
+          requests:
+            cpu: 50m
+            memory: 200Mi
+          limits:
+            memory: 500Mi
+    vmagent:
+      spec:
+        resources:
+          requests:
+            cpu: 150m
+            memory: 256Mi
+          limits:
+            memory: 600Mi
+    vmalert:
+      spec:
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 400Mi
+    internal:
+      vmauth:
+        spec:
+          resources:
+            requests:
+              cpu: 30m
+              memory: 64Mi
+            limits:
+              memory: 200Mi
     grafana:
       persistence:
         enabled: true
         size: 2Gi
       plugins:
         - victoriametrics-logs-datasource
+      resources:
+        requests:
+          cpu: 50m
+          memory: 700Mi
+        limits:
+          memory: 1200Mi
+      sidecar:
+        resources:
+          requests:
+            cpu: 20m
+            memory: 128Mi
+          limits:
+            memory: 256Mi
+    prometheus-node-exporter:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 40Mi
+        limits:
+          memory: 80Mi
+    kube-state-metrics:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+    victoria-metrics-operator:
+      resources:
+        requests:
+          cpu: 20m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
     # KubeVirt's node-labeller stamps ~400 cpu-feature/machine-type labels
     # (*_kubevirt_io_*) onto every node. The chart's default kubelet
     # VMNodeScrape copies all node labels onto every scraped series via
