@@ -49,9 +49,9 @@ data:
             ]
           },
           "targets": [
-            {"refId": "A", "expr": "container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\", container!=\"\", container!=\"POD\"}", "legendFormat": "{{pod}} / {{container}} usage"},
-            {"refId": "B", "expr": "kube_pod_container_resource_requests{namespace=\"$namespace\", resource=\"memory\"}", "legendFormat": "{{pod}} / {{container}} request"},
-            {"refId": "C", "expr": "kube_pod_container_resource_limits{namespace=\"$namespace\", resource=\"memory\"}", "legendFormat": "{{pod}} / {{container}} limit"}
+            {"refId": "A", "expr": "max by(namespace, pod, container) (container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\", container!=\"\", container!=\"POD\"})", "legendFormat": "{{pod}} / {{container}} usage"},
+            {"refId": "B", "expr": "max by(namespace, pod, container) (kube_pod_container_resource_requests{namespace=\"$namespace\", resource=\"memory\"})", "legendFormat": "{{pod}} / {{container}} request"},
+            {"refId": "C", "expr": "max by(namespace, pod, container) (kube_pod_container_resource_limits{namespace=\"$namespace\", resource=\"memory\"})", "legendFormat": "{{pod}} / {{container}} limit"}
           ]
         },
         {
@@ -67,8 +67,8 @@ data:
             ]
           },
           "targets": [
-            {"refId": "A", "expr": "rate(container_cpu_usage_seconds_total{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\", container!=\"\", container!=\"POD\"}[5m])", "legendFormat": "{{pod}} / {{container}} usage"},
-            {"refId": "B", "expr": "kube_pod_container_resource_requests{namespace=\"$namespace\", resource=\"cpu\"}", "legendFormat": "{{pod}} / {{container}} request"}
+            {"refId": "A", "expr": "max by(namespace, pod, container) (rate(container_cpu_usage_seconds_total{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\", container!=\"\", container!=\"POD\"}[5m]))", "legendFormat": "{{pod}} / {{container}} usage"},
+            {"refId": "B", "expr": "max by(namespace, pod, container) (kube_pod_container_resource_requests{namespace=\"$namespace\", resource=\"cpu\"})", "legendFormat": "{{pod}} / {{container}} request"}
           ]
         },
         {
@@ -81,7 +81,7 @@ data:
             "defaults": {"unit": "s", "custom": {"fillOpacity": 10}}
           },
           "targets": [
-            {"refId": "A", "expr": "time() - kube_pod_start_time{namespace=\"$namespace\"}", "legendFormat": "{{pod}}"}
+            {"refId": "A", "expr": "time() - max by(namespace, pod) (kube_pod_start_time{namespace=\"$namespace\"})", "legendFormat": "{{pod}}"}
           ]
         }
       ]
