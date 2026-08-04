@@ -6,3 +6,4 @@ resources:
   - helmrelease.yaml
   - httproute.yaml
   - vmrule-pod-resources.yaml
+  - dashboard-vpa-tuning.yaml

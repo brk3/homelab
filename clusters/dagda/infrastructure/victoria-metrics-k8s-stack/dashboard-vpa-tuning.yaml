@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-vpa-tuning
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  vpa-tuning.json: |
+    {
+      "title": "VPA Auto-Tuning",
+      "uid": "vpa-auto-tuning",
+      "tags": ["vpa", "homelab"],
+      "timezone": "",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "30s",
+      "time": {
+        "from": "now-6h",
+        "to": "now"
+      },
+      "templating": {
+        "list": [
+          {
+            "name": "namespace",
+            "type": "query",
+            "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+            "query": {"query": "label_values(kube_pod_container_resource_requests, namespace)", "refId": "namespace"},
+            "current": {"text": "media", "value": "media"},
+            "includeAll": false,
+            "multi": false,
+            "refresh": 2,
+            "sort": 1
+          }
+        ]
+      },
+      "panels": [
+        {
+          "id": 1,
+          "type": "timeseries",
+          "title": "Memory: usage vs request vs limit",
+          "gridPos": {"h": 8, "w": 24, "x": 0, "y": 0},
+          "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+          "fieldConfig": {
+            "defaults": {"unit": "bytes", "custom": {"fillOpacity": 10}},
+            "overrides": [
+              {"matcher": {"id": "byFrameRefID", "options": "B"}, "properties": [{"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [10, 10]}}, {"id": "custom.fillOpacity", "value": 0}]},
+              {"matcher": {"id": "byFrameRefID", "options": "C"}, "properties": [{"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [4, 4]}}, {"id": "custom.fillOpacity", "value": 0}]}
+            ]
+          },
+          "targets": [
+            {"refId": "A", "expr": "container_memory_working_set_bytes{namespace=\"$namespace\", container!=\"\", container!=\"POD\"}", "legendFormat": "{{pod}} / {{container}} usage"},
+            {"refId": "B", "expr": "kube_pod_container_resource_requests{namespace=\"$namespace\", resource=\"memory\"}", "legendFormat": "{{pod}} / {{container}} request"},
+            {"refId": "C", "expr": "kube_pod_container_resource_limits{namespace=\"$namespace\", resource=\"memory\"}", "legendFormat": "{{pod}} / {{container}} limit"}
+          ]
+        },
+        {
+          "id": 2,
+          "type": "timeseries",
+          "title": "CPU: usage vs request",
+          "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8},
+          "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+          "fieldConfig": {
+            "defaults": {"unit": "short", "custom": {"fillOpacity": 10}},
+            "overrides": [
+              {"matcher": {"id": "byFrameRefID", "options": "B"}, "properties": [{"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [10, 10]}}, {"id": "custom.fillOpacity", "value": 0}]}
+            ]
+          },
+          "targets": [
+            {"refId": "A", "expr": "rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", container!=\"\", container!=\"POD\"}[5m])", "legendFormat": "{{pod}} / {{container}} usage"},
+            {"refId": "B", "expr": "kube_pod_container_resource_requests{namespace=\"$namespace\", resource=\"cpu\"}", "legendFormat": "{{pod}} / {{container}} request"}
+          ]
+        },
+        {
+          "id": 3,
+          "type": "timeseries",
+          "title": "Pod age (drops to 0 = VPA evicted/recreated the pod)",
+          "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16},
+          "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+          "fieldConfig": {
+            "defaults": {"unit": "s", "custom": {"fillOpacity": 10}}
+          },
+          "targets": [
+            {"refId": "A", "expr": "time() - kube_pod_start_time{namespace=\"$namespace\"}", "legendFormat": "{{pod}}"}
+          ]
+        }
+      ]
+    }
