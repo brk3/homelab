@@ -1,0 +1,38 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: kube-state-metrics
+  namespace: monitoring
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: monitoring-victoria-metrics-k8s-stack-kube-state-metrics
+  updatePolicy:
+    updateMode: "Recreate"
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: vmagent
+  namespace: monitoring
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vmagent-monitoring-victoria-metrics-k8s-stack
+  updatePolicy:
+    updateMode: "Recreate"
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: vmsingle
+  namespace: monitoring
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vmsingle-monitoring-victoria-metrics-k8s-stack
+  updatePolicy:
+    updateMode: "Recreate"

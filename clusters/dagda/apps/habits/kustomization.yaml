@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - github.com/brk3/habits//deploy/kustomize/base?ref=v0.7.2
   - httproute.yaml
+  - vpa.yaml
 
 images:
   - name: ghcr.io/brk3/habits

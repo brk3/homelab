@@ -7,3 +7,4 @@ resources:
   - httproute.yaml
   - vmrule-pod-resources.yaml
   - dashboard-vpa-tuning.yaml
+  - vpa.yaml
