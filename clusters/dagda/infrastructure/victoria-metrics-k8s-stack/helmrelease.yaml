@@ -33,40 +33,37 @@ spec:
             memory: 1200Mi
           limits:
             memory: 2400Mi
-    # VictoriaLogs. vlagent's built-in k8sCollector (on by default) tails pod
-    # logs on every node and remote-writes them to vlsingle, so no separate
-    # Vector/fluent-bit DaemonSet is needed.
-    vlsingle:
-      enabled: true
-      spec:
-        extraArgs:
-          retention.maxDiskSpaceUsageBytes: 4GiB
-        storage:
-          resources:
-            requests:
-              storage: 5Gi
-        resources:
-          requests:
-            cpu: 150m
-            memory: 500Mi
-          limits:
-            memory: 1500Mi
-      route:
-        enabled: true
-        parentRefs:
-          - name: eg
-            namespace: envoy-gateway-system
-        hostnames:
-          - logs.aiectomy.xyz
-    vlagent:
-      enabled: true
-      spec:
-        resources:
-          requests:
-            cpu: 50m
-            memory: 200Mi
-          limits:
-            memory: 500Mi
+    # vlsingle:
+    #   enabled: true
+    #   spec:
+    #     extraArgs:
+    #       retention.maxDiskSpaceUsageBytes: 4GiB
+    #     storage:
+    #       resources:
+    #         requests:
+    #           storage: 5Gi
+    #     resources:
+    #       requests:
+    #         cpu: 150m
+    #         memory: 500Mi
+    #       limits:
+    #         memory: 1500Mi
+    #   route:
+    #     enabled: true
+    #     parentRefs:
+    #       - name: eg
+    #         namespace: envoy-gateway-system
+    #     hostnames:
+    #       - logs.aiectomy.xyz
+    # vlagent:
+    #   enabled: true
+    #   spec:
+    #     resources:
+    #       requests:
+    #         cpu: 50m
+    #         memory: 200Mi
+    #       limits:
+    #         memory: 500Mi
     vmagent:
       spec:
         resources:

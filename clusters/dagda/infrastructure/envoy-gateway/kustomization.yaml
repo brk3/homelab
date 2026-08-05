@@ -6,3 +6,4 @@ resources:
   - gatewayclass.yaml
   - certificate.yaml
   - gateway.yaml
+  - vpa.yaml
