@@ -160,7 +160,7 @@ spec:
         spec:
           relabelConfigs:
             - action: labeldrop
-              regex: __meta_kubernetes_node_label_kubevirt_io_.*
+              regex: __meta_kubernetes_node_label_.*kubevirt_io.*
             - action: labelmap
               regex: __meta_kubernetes_node_label_(.+)
           metricRelabelConfigs:
