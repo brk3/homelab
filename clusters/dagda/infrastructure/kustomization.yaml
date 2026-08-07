@@ -6,3 +6,4 @@ resources:
   - kubevirt
   - vpa
   - victoria-metrics-k8s-stack
+  - system-upgrade-controller
