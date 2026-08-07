@@ -30,9 +30,9 @@ spec:
         resources:
           requests:
             cpu: 150m
-            memory: 1200Mi
+            memory: 1900Mi
           limits:
-            memory: 2400Mi
+            memory: 3800Mi
     # vlsingle:
     #   enabled: true
     #   spec:
@@ -69,9 +69,9 @@ spec:
         resources:
           requests:
             cpu: 150m
-            memory: 256Mi
+            memory: 500Mi
           limits:
-            memory: 600Mi
+            memory: 1000Mi
     vmalert:
       spec:
         resources:
@@ -132,15 +132,27 @@ spec:
     # k3s runs kube-scheduler/kube-controller-manager embedded in the
     # single k3s binary (not as separate pods) and uses embedded SQLite
     # instead of etcd, so the chart's Services for these have no matching
-    # Endpoints. That left the scrape targets permanently absent, which
-    # kept KubeSchedulerDown/KubeControllerManagerDown firing forever
-    # (via absent()) and wasted 3 ScrapePool targets.
+    # Endpoints - that's a permanently empty scrape target, not a down
+    # component, so disable scraping to drop the wasted ScrapePool
+    # targets. KubeSchedulerDown/KubeControllerManagerDown alert on
+    # absent(up{...}), which is true precisely when there's no target at
+    # all (same before/after this change) - since k3s can never produce
+    # that series, the alerts themselves are disabled below rather than
+    # left to fire forever. kube-etcd's rules query up{job=~".*etcd.*"}
+    # directly instead of absent(), so they don't fire when the series
+    # is simply missing and need no rule override.
     kubeScheduler:
       enabled: false
     kubeControllerManager:
       enabled: false
     kubeEtcd:
       enabled: false
+    defaultRules:
+      rules:
+        KubeSchedulerDown:
+          enabled: false
+        KubeControllerManagerDown:
+          enabled: false
     # KubeVirt's node-labeller stamps ~400 cpu-feature/machine-type labels
     # (*_kubevirt_io_*) onto every node. The chart's default kubelet
     # VMNodeScrape copies all node labels onto every scraped series via
@@ -154,7 +166,10 @@ spec:
     # reason="too_many_labels") - which kept KubeletDown firing too. The
     # labeldrop below runs before the chart's default labelmap so the
     # kubevirt labels never make it onto `up` (or any other series) in
-    # the first place.
+    # the first place. NOTE: relabelConfigs is a full override, not a
+    # merge, so the chart's other default steps (metrics_path label,
+    # job=kubelet rewrite - the latter is what KubeletDown's expr
+    # actually matches on) are repeated here rather than replaced.
     kubelet:
       vmScrape:
         spec:
@@ -163,6 +178,10 @@ spec:
               regex: __meta_kubernetes_node_label_.*kubevirt_io.*
             - action: labelmap
               regex: __meta_kubernetes_node_label_(.+)
+            - sourceLabels: [__metrics_path__]
+              targetLabel: metrics_path
+            - targetLabel: job
+              replacement: kubelet
           metricRelabelConfigs:
             - action: labeldrop
               regex: (uid)
