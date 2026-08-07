@@ -4,3 +4,4 @@ resources:
   - https://github.com/rancher/system-upgrade-controller/releases/download/v0.20.1/crd.yaml
   - https://github.com/rancher/system-upgrade-controller/releases/download/v0.20.1/system-upgrade-controller.yaml
   - plan.yaml
+  - vpa.yaml
