@@ -15,3 +15,6 @@ spec:
     # Full deployment (recommender + updater + admission controller) so
     # VPAs with updateMode: Recreate can evict/restart pods to apply sizing.
     recommenderOnly: false
+    updater:
+      extraArgs:
+        - --min-replicas=1

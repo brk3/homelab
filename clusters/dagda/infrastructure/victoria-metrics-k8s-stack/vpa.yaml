@@ -62,16 +62,6 @@ spec:
     name: vmalert-monitoring-victoria-metrics-k8s-stack
   updatePolicy:
     updateMode: "Recreate"
----
-apiVersion: autoscaling.k8s.io/v1
-kind: VerticalPodAutoscaler
-metadata:
-  name: vmauth-internal
-  namespace: monitoring
-spec:
-  targetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: vmauth-monitoring-victoria-metrics-k8s-stack-internal
-  updatePolicy:
-    updateMode: "Recreate"
+# No VPA for vmauth-internal: its VMAuth CR (and Deployment) only renders
+# when both a metrics AND a VictoriaLogs read endpoint exist. VictoriaLogs
+# is disabled (see helmrelease.yaml), so this component is never deployed.
