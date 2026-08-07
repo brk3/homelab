@@ -129,6 +129,18 @@ spec:
           memory: 128Mi
         limits:
           memory: 256Mi
+    # k3s runs kube-scheduler/kube-controller-manager embedded in the
+    # single k3s binary (not as separate pods) and uses embedded SQLite
+    # instead of etcd, so the chart's Services for these have no matching
+    # Endpoints. That left the scrape targets permanently absent, which
+    # kept KubeSchedulerDown/KubeControllerManagerDown firing forever
+    # (via absent()) and wasted 3 ScrapePool targets.
+    kubeScheduler:
+      enabled: false
+    kubeControllerManager:
+      enabled: false
+    kubeEtcd:
+      enabled: false
     # KubeVirt's node-labeller stamps ~400 cpu-feature/machine-type labels
     # (*_kubevirt_io_*) onto every node. The chart's default kubelet
     # VMNodeScrape copies all node labels onto every scraped series via
@@ -136,9 +148,21 @@ spec:
     # default 40-label-per-series limit, so they get silently dropped -
     # this is why kubelet/cadvisor-derived dashboards (e.g. Compute
     # Resources / Pod) show "No Data" despite scraping showing healthy.
+    # metricRelabelConfigs never applies to the synthetic `up` series, so
+    # up{job="kubelet"} was still ~407 labels wide, over VictoriaMetrics'
+    # 40-label cap, and got dropped on ingest (vm_rows_ignored_total
+    # reason="too_many_labels") - which kept KubeletDown firing too. The
+    # labeldrop below runs before the chart's default labelmap so the
+    # kubevirt labels never make it onto `up` (or any other series) in
+    # the first place.
     kubelet:
       vmScrape:
         spec:
+          relabelConfigs:
+            - action: labeldrop
+              regex: __meta_kubernetes_node_label_kubevirt_io_.*
+            - action: labelmap
+              regex: __meta_kubernetes_node_label_(.+)
           metricRelabelConfigs:
             - action: labeldrop
               regex: (uid)
