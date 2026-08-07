@@ -13,9 +13,27 @@ spec:
       labels:
         app: homepage
     spec:
+      # homepage v1.x insists on writing into /app/config at startup: it copies
+      # skeleton configs (kubernetes.yaml, docker.yaml, ...) in and mkdirs a
+      # logs dir, so a bare read-only ConfigMap mount there makes it exit 1.
+      # Give it a writable emptyDir and seed our ConfigMap into it instead.
+      initContainers:
+        - name: seed-config
+          image: ghcr.io/gethomepage/homepage:latest
+          command: ["sh", "-c", "cp /config-src/*.yaml /app/config/"]
+          volumeMounts:
+            - name: config-src
+              mountPath: /config-src
+            - name: config
+              mountPath: /app/config
       containers:
         - name: homepage
           image: ghcr.io/gethomepage/homepage:latest
+          env:
+            # homepage v1.0+ validates the Host header and rejects anything
+            # not listed here, so the HTTPRoute hostname must be allowed.
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: "homepage.aiectomy.xyz"
           resources:
             requests:
               cpu: 50m
@@ -29,9 +47,11 @@ spec:
             - name: config
               mountPath: /app/config
       volumes:
-        - name: config
+        - name: config-src
           configMap:
             name: homepage-config
+        - name: config
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
