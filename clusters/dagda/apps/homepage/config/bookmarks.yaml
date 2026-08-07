@@ -1,0 +1,18 @@
+- Infra:
+    - homelab repo:
+        - abbr: GH
+          href: https://github.com/brk3/homelab
+    - Cloudflare:
+        - abbr: CF
+          href: https://dash.cloudflare.com
+
+- Reference:
+    - homepage docs:
+        - abbr: HP
+          href: https://gethomepage.dev/configs/services/
+    - k3s docs:
+        - abbr: K3
+          href: https://docs.k3s.io
+    - Flux docs:
+        - abbr: FX
+          href: https://fluxcd.io/flux/

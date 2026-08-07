@@ -1,0 +1,20 @@
+title: Dagda
+theme: dark
+color: slate
+headerStyle: boxed
+target: _blank
+statusStyle: dot
+
+layout:
+  Media:
+    style: row
+    columns: 4
+  Downloads:
+    style: row
+    columns: 2
+  Monitoring:
+    style: row
+    columns: 2
+  Apps:
+    style: row
+    columns: 2

@@ -1,0 +1,101 @@
+- Media:
+    - Plex:
+        href: https://plex.aiectomy.xyz
+        icon: plex.png
+        description: Streaming
+        namespace: media
+        podSelector: app=plex
+        siteMonitor: http://plex.media.svc.cluster.local:32400/identity
+        widget:
+          type: plex
+          url: http://plex.media.svc.cluster.local:32400
+          key: {{HOMEPAGE_VAR_PLEX_KEY}}
+
+    - Sonarr:
+        href: https://sonarr.aiectomy.xyz
+        icon: sonarr.png
+        description: TV shows
+        namespace: media
+        podSelector: app=sonarr
+        siteMonitor: http://sonarr.media.svc.cluster.local:8989
+        widget:
+          type: sonarr
+          url: http://sonarr.media.svc.cluster.local:8989
+          key: {{HOMEPAGE_VAR_SONARR_KEY}}
+          enableQueue: true
+
+    - Radarr:
+        href: https://radarr.aiectomy.xyz
+        icon: radarr.png
+        description: Movies
+        namespace: media
+        podSelector: app=radarr
+        siteMonitor: http://radarr.media.svc.cluster.local:7878
+        widget:
+          type: radarr
+          url: http://radarr.media.svc.cluster.local:7878
+          key: {{HOMEPAGE_VAR_RADARR_KEY}}
+          enableQueue: true
+
+    - Bazarr:
+        href: https://bazarr.aiectomy.xyz
+        icon: bazarr.png
+        description: Subtitles
+        namespace: media
+        podSelector: app=bazarr
+        siteMonitor: http://bazarr.media.svc.cluster.local:6767
+        widget:
+          type: bazarr
+          url: http://bazarr.media.svc.cluster.local:6767
+          key: {{HOMEPAGE_VAR_BAZARR_KEY}}
+
+- Downloads:
+    - qBittorrent:
+        href: https://qbittorrent.aiectomy.xyz
+        icon: qbittorrent.png
+        description: Torrent client
+        namespace: media
+        podSelector: app=qbittorrent
+        siteMonitor: http://qbittorrent.media.svc.cluster.local:8080
+        widget:
+          type: qbittorrent
+          url: http://qbittorrent.media.svc.cluster.local:8080
+          username: {{HOMEPAGE_VAR_QBIT_USER}}
+          password: {{HOMEPAGE_VAR_QBIT_PASS}}
+
+    - Prowlarr:
+        href: https://prowlarr.aiectomy.xyz
+        icon: prowlarr.png
+        description: Indexers
+        namespace: media
+        podSelector: app=prowlarr
+        siteMonitor: http://prowlarr.media.svc.cluster.local:9696
+        widget:
+          type: prowlarr
+          url: http://prowlarr.media.svc.cluster.local:9696
+          key: {{HOMEPAGE_VAR_PROWLARR_KEY}}
+
+- Monitoring:
+    - Grafana:
+        href: https://grafana.aiectomy.xyz
+        icon: grafana.png
+        description: Dashboards
+        namespace: monitoring
+        podSelector: app.kubernetes.io/name=grafana
+        siteMonitor: http://monitoring-victoria-metrics-k8s-stack-grafana.monitoring.svc.cluster.local:80
+
+    - Alertmanager:
+        href: https://alertmanager.aiectomy.xyz
+        icon: alertmanager.png
+        description: Alerts
+        namespace: monitoring
+        siteMonitor: http://vmalertmanager-monitoring-victoria-metrics-k8s-stack.monitoring.svc.cluster.local:9093
+
+- Apps:
+    - Habits:
+        href: https://habits.aiectomy.xyz
+        icon: mdi-check-circle
+        description: Habit tracking
+        namespace: habits
+        podSelector: app=habits-frontend
+        siteMonitor: http://habits-frontend.habits.svc.cluster.local:80
