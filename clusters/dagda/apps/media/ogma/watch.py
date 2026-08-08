@@ -17,6 +17,9 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 from link_media import (
+    MIN_VIDEO_SIZE_MB,
+    MOVIES_ROOT,
+    TV_ROOT,
     build_movie_dest,
     build_tv_dest,
     guess_media_type,
@@ -30,13 +33,25 @@ WATCH_DIR = Path(os.environ.get("WATCH_DIR", "/data/downloads/complete"))
 SETTLE_SECONDS = int(os.environ.get("SETTLE_SECONDS", "5"))
 
 
-def process_entry(path: Path):
+def process_entry(
+    path: Path,
+    tv_root: Path = TV_ROOT,
+    movies_root: Path = MOVIES_ROOT,
+    min_size_mb: int = MIN_VIDEO_SIZE_MB,
+):
     if not path.exists():
         return
-    for f in iter_video_files(path):
+    # Prefer the containing folder's title/year over the file's: release folder
+    # names are almost always properly cased even when the file inside isn't.
+    folder_info = guessit(path.name) if path.is_dir() else {}
+    for f in iter_video_files(path, min_size_mb=min_size_mb):
         info = guessit(f.name)
+        if folder_info.get("title"):
+            info["title"] = folder_info["title"]
+        if folder_info.get("year"):
+            info["year"] = folder_info["year"]
         media_type = guess_media_type(info)
-        dest = build_tv_dest(f, info) if media_type == "episode" else build_movie_dest(f, info)
+        dest = build_tv_dest(f, info, root=tv_root) if media_type == "episode" else build_movie_dest(f, info, root=movies_root)
         if dest is None:
             logging.warning("Could not determine destination for %s (guessit: %s)", f, info)
             continue
