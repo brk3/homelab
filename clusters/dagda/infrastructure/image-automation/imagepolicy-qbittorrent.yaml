@@ -1,0 +1,12 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: qbittorrent
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: qbittorrent
+  policy:
+    semver:
+      # patch-only for the pilot; widen once you trust the automation
+      range: ">=5.2.3 <5.3.0"
