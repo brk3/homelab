@@ -1,3 +1,0 @@
-# TODO
-
-- [ ] Investigate VPA results
