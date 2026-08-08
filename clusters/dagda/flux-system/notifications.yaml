@@ -11,16 +11,3 @@ spec:
   channel: "1506252315"
   secretRef:
     name: flux-telegram-token
----
-apiVersion: notification.toolkit.fluxcd.io/v1beta3
-kind: Alert
-metadata:
-  name: image-automation
-  namespace: flux-system
-spec:
-  providerRef:
-    name: telegram
-  eventSeverity: info
-  eventSources:
-    - kind: ImageUpdateAutomation
-      name: "*"

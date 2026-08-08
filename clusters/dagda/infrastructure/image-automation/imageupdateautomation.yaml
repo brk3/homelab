@@ -19,7 +19,11 @@ spec:
       messageTemplate: |
         Automated image update
 
-        {{ range .Updated.Images }}{{ println . }}{{ end }}
+        {{ range $resource, $changes := .Changed.Objects -}}
+        {{ range $change := $changes -}}
+        {{ $change.OldValue }} -> {{ $change.NewValue }}
+        {{ end -}}
+        {{ end -}}
   update:
     path: ./clusters/dagda/apps/media
     strategy: Setters
