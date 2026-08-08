@@ -1,0 +1,31 @@
+apiVersion: fluxcd.controlplane.io/v1
+kind: FluxInstance
+metadata:
+  name: flux
+  namespace: flux-system
+spec:
+  distribution:
+    version: "2.9.x"
+    registry: "ghcr.io/fluxcd"
+  components:
+    - source-controller
+    - kustomize-controller
+    - helm-controller
+    - notification-controller
+  cluster:
+    networkPolicy: true
+  kustomize:
+    patches:
+      - target:
+          kind: Deployment
+          name: "(helm-controller|kustomize-controller|notification-controller|source-controller)"
+        patch: |
+          - op: replace
+            path: /spec/template/spec/containers/0/resources/limits/memory
+            value: 400Mi
+  sync:
+    kind: GitRepository
+    url: "https://github.com/brk3/homelab.git"
+    ref: "refs/heads/main"
+    path: "./clusters/dagda"
+    pullSecret: "flux-system"
