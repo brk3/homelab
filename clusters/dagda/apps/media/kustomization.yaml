@@ -9,5 +9,6 @@ resources:
   - radarr.yaml
   - bazarr.yaml
   - plex.yaml
+  - seerr.yaml
   - vpa.yaml
   - httproutes.yaml
