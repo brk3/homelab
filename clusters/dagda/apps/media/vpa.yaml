@@ -14,71 +14,6 @@ spec:
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
-  name: prowlarr
-  namespace: media
-spec:
-  targetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: prowlarr
-  updatePolicy:
-    updateMode: "Recreate"
----
-apiVersion: autoscaling.k8s.io/v1
-kind: VerticalPodAutoscaler
-metadata:
-  name: flaresolverr
-  namespace: media
-spec:
-  targetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: flaresolverr
-  updatePolicy:
-    updateMode: "Recreate"
----
-apiVersion: autoscaling.k8s.io/v1
-kind: VerticalPodAutoscaler
-metadata:
-  name: sonarr
-  namespace: media
-spec:
-  targetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: sonarr
-  updatePolicy:
-    updateMode: "Recreate"
----
-apiVersion: autoscaling.k8s.io/v1
-kind: VerticalPodAutoscaler
-metadata:
-  name: radarr
-  namespace: media
-spec:
-  targetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: radarr
-  updatePolicy:
-    updateMode: "Recreate"
----
-apiVersion: autoscaling.k8s.io/v1
-kind: VerticalPodAutoscaler
-metadata:
-  name: bazarr
-  namespace: media
-spec:
-  targetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: bazarr
-  updatePolicy:
-    updateMode: "Recreate"
----
-apiVersion: autoscaling.k8s.io/v1
-kind: VerticalPodAutoscaler
-metadata:
   name: plex
   namespace: media
 spec:
@@ -92,12 +27,12 @@ spec:
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
-  name: seerr
+  name: ogma
   namespace: media
 spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: seerr
+    name: ogma
   updatePolicy:
     updateMode: "Recreate"

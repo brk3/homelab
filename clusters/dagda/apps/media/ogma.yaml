@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ogma
+  namespace: media
+  annotations:
+    kustomize.toolkit.fluxcd.io/force: "true"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: ogma
+  template:
+    metadata:
+      labels:
+        app: ogma
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: ogma
+          image: python:3.13-alpine
+          command:
+            - sh
+            - -c
+            - pip install --no-cache-dir --user -r /scripts/requirements.txt && python3 -u /scripts/watch.py
+          env:
+            - name: HOME
+              value: "/tmp"
+            - name: WATCH_DIR
+              value: "/data/downloads/complete"
+            - name: TV_ROOT
+              value: "/data/tv"
+            - name: MOVIES_ROOT
+              value: "/data/movies"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+          volumeMounts:
+            - name: media
+              mountPath: /data
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: media
+          hostPath:
+            path: /mnt/media
+            type: Directory
+        - name: scripts
+          configMap:
+            name: ogma-scripts

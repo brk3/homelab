@@ -3,12 +3,14 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - qbittorrent.yaml
-  - prowlarr.yaml
-  - flaresolverr.yaml
-  - sonarr.yaml
-  - radarr.yaml
-  - bazarr.yaml
   - plex.yaml
-  - seerr.yaml
+  - ogma.yaml
   - vpa.yaml
   - httproutes.yaml
+configMapGenerator:
+  - name: ogma-scripts
+    namespace: media
+    files:
+      - ogma/watch.py
+      - ogma/link_media.py
+      - ogma/requirements.txt
