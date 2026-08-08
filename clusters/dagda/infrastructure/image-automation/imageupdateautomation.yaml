@@ -12,8 +12,6 @@ spec:
     checkout:
       ref:
         branch: main
-    push:
-      branch: flux-image-updates
     commit:
       author:
         email: fluxcdbot@users.noreply.github.com

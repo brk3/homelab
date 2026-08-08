@@ -9,6 +9,7 @@ None of these are stored in git. They're created out-of-band (`kubectl create se
 | `flux-system` | `flux-system` | `username`, `password` | `GitRepository/flux-system` (`clusters/dagda/flux-system/gotk-sync.yaml`) | GitHub credentials Flux uses to pull this repo |
 | `cloudflare-api-token-secret` | `cert-manager` | `api-token` | `ClusterIssuer/letsencrypt-staging`, `ClusterIssuer/letsencrypt-prod` (`clusters/dagda/infrastructure/cert-manager/clusterissuer.yaml`) | Cloudflare API token for the Let's Encrypt DNS-01 solver |
 | `alertmanager-telegram-config` | `monitoring` | `alertmanager.yaml` | `HelmRelease/victoria-metrics-k8s-stack` via `alertmanager.spec.configSecret` (`clusters/dagda/infrastructure/victoria-metrics-k8s-stack/helmrelease.yaml`) | Alertmanager routes + Telegram bot token/chat ID |
+| `flux-telegram-token` | `flux-system` | `token` | `Provider/telegram` (`clusters/dagda/flux-system/notifications.yaml`) | Telegram bot token for Flux notification-controller alerts (e.g. image automation commits) |
 
 ### Recreate `flux-system`
 
@@ -40,6 +41,15 @@ kubectl create secret generic alertmanager-telegram-config -n monitoring \
 ```
 
 The `alertmanager.yaml` content itself isn't backed up anywhere yet — recreating this secret after total loss requires rewriting that config (routes + Telegram bot token/chat ID) from scratch.
+
+### Recreate `flux-telegram-token`
+
+```
+kubectl create secret generic flux-telegram-token -n flux-system \
+  --from-literal=token=<bot-token>
+```
+
+Can reuse the same bot as `alertmanager-telegram-config` — this just needs its own secret since Flux's notification-controller expects a bare `token` key rather than a full Alertmanager config. The chat ID goes unencrypted in `Provider/telegram`'s `spec.channel` (`clusters/dagda/flux-system/notifications.yaml`), not in this secret.
 
 ## One-time tokens (not persistent secrets)
 

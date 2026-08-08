@@ -1,0 +1,26 @@
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Provider
+metadata:
+  name: telegram
+  namespace: flux-system
+spec:
+  type: telegram
+  # same bot used by alertmanager-telegram-config, different chat/token secret
+  # since Flux's notification-controller expects its own {token: ...} secret
+  # rather than a full alertmanager.yaml blob
+  channel: "1506252315"
+  secretRef:
+    name: flux-telegram-token
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: image-automation
+  namespace: flux-system
+spec:
+  providerRef:
+    name: telegram
+  eventSeverity: info
+  eventSources:
+    - kind: ImageUpdateAutomation
+      name: "*"
