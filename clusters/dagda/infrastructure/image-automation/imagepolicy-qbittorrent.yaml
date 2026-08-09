@@ -6,6 +6,7 @@ metadata:
 spec:
   imageRepositoryRef:
     name: qbittorrent
+  digestReflectionPolicy: IfNotPresent
   policy:
     semver:
       # patch-only for the pilot; widen once you trust the automation
