@@ -5,4 +5,6 @@ resources:
   - imagepolicy-qbittorrent.yaml
   - imagerepository-ogma.yaml
   - imagepolicy-ogma.yaml
+  - imagerepository-plex.yaml
+  - imagepolicy-plex.yaml
   - imageupdateautomation.yaml
