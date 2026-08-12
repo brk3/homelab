@@ -19,7 +19,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: plex
-          image: lscr.io/linuxserver/plex:1.43.3@sha256:507713a14f9586f827d00c81381ecdcd438009172342b322b62a0e2b65081fdf # {"$imagepolicy": "flux-system:plex"}
+          image: lscr.io/linuxserver/plex:1.43.3@sha256:d5ee6068a20ae57f95060038eaef292cdfd4285efb213ea4daaccdc184e45d1b # {"$imagepolicy": "flux-system:plex"}
           env:
             - name: PUID
               value: "1000"
@@ -81,4 +81,3 @@ spec:
     - name: webui
       port: 32400
       targetPort: 32400
-
