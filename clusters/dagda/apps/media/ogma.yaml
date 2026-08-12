@@ -22,7 +22,7 @@ spec:
         runAsGroup: 1000
       containers:
         - name: ogma
-          image: ghcr.io/brk3/ogma:v0.1.2@sha256:16df5aa4c2a33634d62ebeacabe57ae7e3ba4234e435133ed82d78c62bf83bd2 # {"$imagepolicy": "flux-system:ogma"}
+          image: ghcr.io/brk3/ogma:v0.1.3@sha256:d595d7f90679f54925143ee603420c4323d4fd5e46989c85285e84e401c69689 # {"$imagepolicy": "flux-system:ogma"}
           env:
             - name: WATCH_DIR
               value: "/data/downloads/complete"
