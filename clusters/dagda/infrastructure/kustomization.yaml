@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - envoy-gateway
   - cert-manager
-  - kubevirt
+  #- kubevirt
   - vpa
   - victoria-metrics-k8s-stack
   - system-upgrade-controller
