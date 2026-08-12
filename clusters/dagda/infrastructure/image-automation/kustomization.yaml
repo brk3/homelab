@@ -3,4 +3,6 @@ kind: Kustomization
 resources:
   - imagerepository-qbittorrent.yaml
   - imagepolicy-qbittorrent.yaml
+  - imagerepository-ogma.yaml
+  - imagepolicy-ogma.yaml
   - imageupdateautomation.yaml

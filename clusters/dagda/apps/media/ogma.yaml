@@ -22,20 +22,37 @@ spec:
         runAsGroup: 1000
       containers:
         - name: ogma
-          image: python:3.13-alpine
-          command:
-            - sh
-            - -c
-            - pip install --no-cache-dir --user -r /scripts/requirements.txt && python3 -u /scripts/watch.py
+          image: ghcr.io/brk3/ogma:v0.1.1@sha256:e39cd900e1d4245bad9c7843001a98255f4f238f34f4e01b1c7a71c4bc78b223 # {"$imagepolicy": "flux-system:ogma"}
           env:
-            - name: HOME
-              value: "/tmp"
             - name: WATCH_DIR
               value: "/data/downloads/complete"
             - name: TV_ROOT
               value: "/data/tv"
             - name: MOVIES_ROOT
               value: "/data/movies"
+          ports:
+            - name: health
+              containerPort: 8080
+          # Liveness only starts once the initial scan has finished, so a slow
+          # scan can't be mistaken for a hang.
+          startupProbe:
+            httpGet:
+              path: /readyz
+              port: health
+            periodSeconds: 10
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: health
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+            periodSeconds: 30
           resources:
             requests:
               cpu: 50m
@@ -45,13 +62,8 @@ spec:
           volumeMounts:
             - name: media
               mountPath: /data
-            - name: scripts
-              mountPath: /scripts
       volumes:
         - name: media
           hostPath:
             path: /mnt/media
             type: Directory
-        - name: scripts
-          configMap:
-            name: ogma-scripts

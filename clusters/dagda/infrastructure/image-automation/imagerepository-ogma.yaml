@@ -1,0 +1,8 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: ogma
+  namespace: flux-system
+spec:
+  image: ghcr.io/brk3/ogma
+  interval: 1h
