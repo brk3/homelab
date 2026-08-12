@@ -7,4 +7,6 @@ resources:
   - imagepolicy-ogma.yaml
   - imagerepository-plex.yaml
   - imagepolicy-plex.yaml
+  - imagerepository-brigid.yaml
+  - imagepolicy-brigid.yaml
   - imageupdateautomation.yaml

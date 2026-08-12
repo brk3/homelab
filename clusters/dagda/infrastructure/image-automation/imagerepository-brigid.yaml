@@ -1,0 +1,8 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: brigid
+  namespace: flux-system
+spec:
+  image: ghcr.io/brk3/brigid
+  interval: 1h

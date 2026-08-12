@@ -1,0 +1,12 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: brigid
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: brigid
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: ">=0.1.0"

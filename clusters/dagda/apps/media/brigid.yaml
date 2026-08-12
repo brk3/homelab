@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: brigid
+  namespace: media
+  annotations:
+    kustomize.toolkit.fluxcd.io/force: "true"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: brigid
+  template:
+    metadata:
+      labels:
+        app: brigid
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: brigid
+          image: ghcr.io/brk3/brigid:v0.1.0@sha256:0031ba437206b7ef7cbe88f94d1e01d51a7d8c133d8d24f3899941b9515b1b84 # {"$imagepolicy": "flux-system:brigid"}
+          envFrom:
+            - secretRef:
+                name: brigid-provider-credentials
+                optional: true
+          env:
+            - name: TV_ROOT
+              value: "/data/tv"
+            - name: MOVIES_ROOT
+              value: "/data/movies"
+            - name: LANGUAGES
+              value: "en"
+          ports:
+            - name: health
+              containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: /readyz
+              port: health
+            periodSeconds: 10
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: health
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+          volumeMounts:
+            - name: media
+              mountPath: /data
+      volumes:
+        - name: media
+          hostPath:
+            path: /mnt/media
+            type: Directory

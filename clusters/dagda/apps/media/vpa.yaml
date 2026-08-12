@@ -36,3 +36,16 @@ spec:
     name: ogma
   updatePolicy:
     updateMode: "Recreate"
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: brigid
+  namespace: media
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: brigid
+  updatePolicy:
+    updateMode: "Recreate"
