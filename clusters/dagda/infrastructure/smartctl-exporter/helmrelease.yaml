@@ -1,0 +1,27 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: smartctl-exporter
+  namespace: flux-system
+spec:
+  interval: 1h
+  targetNamespace: monitoring
+  install:
+    createNamespace: true
+  chartRef:
+    kind: OCIRepository
+    name: smartctl-exporter
+  values:
+    # No devices/device_include set: the exporter auto-discovers disks via
+    # `smartctl --scan` (dagda's /dev/sda and /dev/nvme0n1) so nothing to
+    # list explicitly here.
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        memory: 64Mi
+    # ServiceMonitor/PrometheusRule are prometheus-operator CRDs this
+    # cluster doesn't run - left disabled (chart default) in favour of the
+    # hand-written VMServiceScrape/VMRule alongside this file, matching
+    # the rest of this repo's monitoring setup.

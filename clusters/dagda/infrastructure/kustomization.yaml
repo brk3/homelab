@@ -9,3 +9,4 @@ resources:
   - system-upgrade-controller
   - flux-operator
   - image-automation
+  - smartctl-exporter

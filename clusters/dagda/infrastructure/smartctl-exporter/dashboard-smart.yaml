@@ -1,0 +1,119 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-smart
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  smart.json: |
+    {
+      "title": "Disk S.M.A.R.T. Health",
+      "uid": "smart-health",
+      "tags": ["smart", "homelab"],
+      "timezone": "",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "5m",
+      "time": {
+        "from": "now-7d",
+        "to": "now"
+      },
+      "panels": [
+        {
+          "id": 1,
+          "type": "stat",
+          "title": "Overall SMART Status",
+          "gridPos": {"h": 4, "w": 8, "x": 0, "y": 0},
+          "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [
+                {"type": "value", "options": {"0": {"text": "FAILED", "color": "red"}, "1": {"text": "PASSED", "color": "green"}}}
+              ],
+              "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]}
+            },
+            "overrides": []
+          },
+          "options": {"textMode": "value_and_name", "colorMode": "background", "graphMode": "none"},
+          "targets": [
+            {"refId": "A", "expr": "smartctl_device_smart_status", "legendFormat": "{{device}}", "instant": true}
+          ]
+        },
+        {
+          "id": 2,
+          "type": "table",
+          "title": "Devices",
+          "gridPos": {"h": 4, "w": 16, "x": 8, "y": 0},
+          "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+          "transformations": [
+            {"id": "organize", "options": {"excludeByName": {"Time": true, "Value": true, "ata_additional_product_id": true, "ata_version": true, "form_factor": true, "model_family": true, "protocol": true, "sata_version": true}}}
+          ],
+          "targets": [
+            {"refId": "A", "expr": "smartctl_device", "format": "table", "instant": true}
+          ]
+        },
+        {
+          "id": 3,
+          "type": "timeseries",
+          "title": "Temperature",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+          "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+          "fieldConfig": {
+            "defaults": {"unit": "celsius", "custom": {"fillOpacity": 10}},
+            "overrides": []
+          },
+          "targets": [
+            {"refId": "A", "expr": "smartctl_device_temperature{temperature_type=\"current\"}", "legendFormat": "{{device}}"}
+          ]
+        },
+        {
+          "id": 4,
+          "type": "timeseries",
+          "title": "Power-On Time",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+          "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+          "fieldConfig": {
+            "defaults": {"unit": "h", "custom": {"fillOpacity": 10}},
+            "overrides": []
+          },
+          "targets": [
+            {"refId": "A", "expr": "smartctl_device_attribute{attribute_name=\"Power_On_Hours\", attribute_value_type=\"raw\"} or (smartctl_device_power_on_seconds / 3600)", "legendFormat": "{{device}}"}
+          ]
+        },
+        {
+          "id": 5,
+          "type": "timeseries",
+          "title": "SATA Sector Health (Reallocated / Pending / Uncorrectable)",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+          "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+          "fieldConfig": {
+            "defaults": {"unit": "short", "custom": {"fillOpacity": 10}},
+            "overrides": []
+          },
+          "targets": [
+            {"refId": "A", "expr": "smartctl_device_attribute{attribute_name=\"Reallocated_Sector_Ct\", attribute_value_type=\"raw\"}", "legendFormat": "{{device}} reallocated"},
+            {"refId": "B", "expr": "smartctl_device_attribute{attribute_name=\"Current_Pending_Sector\", attribute_value_type=\"raw\"}", "legendFormat": "{{device}} pending"},
+            {"refId": "C", "expr": "smartctl_device_attribute{attribute_name=\"Offline_Uncorrectable\", attribute_value_type=\"raw\"}", "legendFormat": "{{device}} uncorrectable"}
+          ]
+        },
+        {
+          "id": 6,
+          "type": "timeseries",
+          "title": "NVMe Health (Media Errors / Critical Warning / Available Spare %)",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+          "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+          "fieldConfig": {
+            "defaults": {"unit": "short", "custom": {"fillOpacity": 10}},
+            "overrides": [
+              {"matcher": {"id": "byFrameRefID", "options": "C"}, "properties": [{"id": "unit", "value": "percent"}]}
+            ]
+          },
+          "targets": [
+            {"refId": "A", "expr": "smartctl_device_media_errors", "legendFormat": "{{device}} media errors"},
+            {"refId": "B", "expr": "smartctl_device_critical_warning", "legendFormat": "{{device}} critical warning"},
+            {"refId": "C", "expr": "smartctl_device_available_spare", "legendFormat": "{{device}} available spare"}
+          ]
+        }
+      ]
+    }
