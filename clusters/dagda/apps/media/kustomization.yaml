@@ -5,6 +5,5 @@ resources:
   - qbittorrent.yaml
   - plex.yaml
   - ogma.yaml
-  - migrate-leaf-names-job.yaml
   - vpa.yaml
   - httproutes.yaml
