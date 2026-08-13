@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - forgejo.yaml
+  - runner-deployment.yaml
   - vpa.yaml
   - httproute.yaml

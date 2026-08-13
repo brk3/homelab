@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forgejo-runner
+  namespace: forgejo
+  annotations:
+    kustomize.toolkit.fluxcd.io/force: "true"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: forgejo-runner
+  template:
+    metadata:
+      labels:
+        app: forgejo-runner
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      initContainers:
+        - name: register
+          image: code.forgejo.org/forgejo/runner:13.0.0@sha256:7fb853bfe73c229be6349398359c0a7bd01fadfd17c106607b2221150b799ed2 # {"$imagepolicy": "flux-system:forgejo-runner"}
+          command:
+            - sh
+            - -c
+            - |
+              test -f /data/.runner && exit 0
+              forgejo-runner create-runner-file \
+                --instance https://forgejo.aiectomy.xyz \
+                --name dagda \
+                --token "$RUNNER_TOKEN" \
+                --labels docker
+          env:
+            - name: RUNNER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: forgejo-runner-registration
+                  key: token
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      containers:
+        - name: runner
+          image: code.forgejo.org/forgejo/runner:13.0.0@sha256:7fb853bfe73c229be6349398359c0a7bd01fadfd17c106607b2221150b799ed2 # {"$imagepolicy": "flux-system:forgejo-runner"}
+          command:
+            - sh
+            - -c
+            - |
+              until docker -H tcp://localhost:2375 info >/dev/null 2>&1; do
+                echo "waiting for dind..."; sleep 2
+              done
+              exec forgejo-runner --config /data/.runner daemon
+          env:
+            - name: DOCKER_HOST
+              value: "tcp://localhost:2375"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+        - name: dind
+          image: docker:29.7.2-dind-rootless@sha256:8a213afdd096a44dff403aaf8eb58b7a96a63113f18a4b094b98b7d0ed7d948b
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""
+          args:
+            - --host=tcp://0.0.0.0:2375
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1500Mi
+          volumeMounts:
+            - name: dind-data
+              mountPath: /home/rootless/.local/share/docker
+      volumes:
+        - name: data
+          hostPath:
+            path: /mnt/k3s-data/appdata/forgejo-runner
+            type: Directory
+        - name: dind-data
+          emptyDir:
+            sizeLimit: 10Gi
