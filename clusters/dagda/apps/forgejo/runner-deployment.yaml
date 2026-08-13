@@ -28,11 +28,13 @@ spec:
             - -c
             - |
               test -f /data/.runner && exit 0
-              forgejo-runner create-runner-file \
+              forgejo-runner register \
+                --config /data/.runner \
                 --instance https://forgejo.aiectomy.xyz \
                 --name dagda \
                 --token "$RUNNER_TOKEN" \
-                --labels docker
+                --labels docker \
+                --no-interactive
           env:
             - name: RUNNER_TOKEN
               valueFrom:
