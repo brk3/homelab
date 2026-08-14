@@ -13,4 +13,6 @@ resources:
   - imagepolicy-forgejo.yaml
   - imagerepository-forgejo-runner.yaml
   - imagepolicy-forgejo-runner.yaml
+  - imagerepository-glance.yaml
+  - imagepolicy-glance.yaml
   - imageupdateautomation.yaml

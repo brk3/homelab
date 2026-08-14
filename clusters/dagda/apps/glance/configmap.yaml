@@ -30,8 +30,23 @@ data:
                   - timezone: Asia/Kolkata
                     label: Hyderabad
 
+              - type: custom-api
+                title: xkcd
+                cache: 6h
+                url: https://xkcd.com/info.0.json
+                template: |
+                  <p class="size-h5">{{ .JSON.String "title" }}</p>
+                  <img src="{{ .JSON.String "img" }}">
+
           - size: full
             widgets:
+              - type: repository
+                title: Homelab commits
+                repository: brk3/homelab
+                pull-requests-limit: -1
+                issues-limit: -1
+                commits-limit: 5
+
               - type: monitor
                 title: Homelab services
                 cache: 1m
@@ -194,6 +209,10 @@ data:
 
           - size: small
             widgets:
+              - type: html
+                source: |
+                  <img src="https://cataas.com/cat?width=400" style="width:100%;border-radius:10px;">
+
               - type: markets
                 markets:
                   - symbol: ORCL
