@@ -5,6 +5,7 @@ resources:
   - ocirepository.yaml
   - helmrelease.yaml
   - httproute.yaml
+  - secret.yaml
   - vmrule-pod-resources.yaml
   - dashboard-vpa-tuning.yaml
   - vpa.yaml

@@ -6,6 +6,7 @@ resources:
   #- kubevirt
   - vpa
   - victoria-metrics-k8s-stack
+  - notifications
   - system-upgrade-controller
   - flux-operator
   - image-automation
