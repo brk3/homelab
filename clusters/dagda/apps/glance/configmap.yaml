@@ -63,11 +63,60 @@ data:
                     <footer class="color-highlight">&mdash; {{ .JSON.String "0.a" }}</footer>
                   </blockquote>
 
-              - type: releases
-                cache: 1d
-                repositories:
-                  - glanceapp/glance
-                  - fluxcd/flux2
-                  - k3s-io/k3s
-                  - envoyproxy/gateway
-                  - cert-manager/cert-manager
+              - type: custom-api
+                title: Infra versions
+                cache: 12h
+                subrequests:
+                  glance:
+                    url: https://api.github.com/repos/glanceapp/glance/releases/latest
+                  flux2:
+                    url: https://api.github.com/repos/fluxcd/flux2/releases/latest
+                  k3s:
+                    url: https://api.github.com/repos/k3s-io/k3s/releases/latest
+                  envoy-gateway:
+                    url: https://api.github.com/repos/envoyproxy/gateway/releases/latest
+                  cert-manager:
+                    url: https://api.github.com/repos/cert-manager/cert-manager/releases/latest
+                template: |
+                  <ul class="list list-gap-10">
+                    {{ $current := "v0.8.5" }}
+                    {{ $latest := (.Subrequest "glance").JSON.String "tag_name" }}
+                    <li class="flex justify-between">
+                      <span>Glance</span>
+                      <a href="{{ (.Subrequest "glance").JSON.String "html_url" }}" target="_blank">
+                        {{ if eq $current $latest }}{{ $current }}{{ else }}{{ $current }} &rarr; {{ $latest }}{{ end }}
+                      </a>
+                    </li>
+                    {{ $current = "v2.9.4" }}
+                    {{ $latest = (.Subrequest "flux2").JSON.String "tag_name" }}
+                    <li class="flex justify-between">
+                      <span>Flux</span>
+                      <a href="{{ (.Subrequest "flux2").JSON.String "html_url" }}" target="_blank">
+                        {{ if eq $current $latest }}{{ $current }}{{ else }}{{ $current }} &rarr; {{ $latest }}{{ end }}
+                      </a>
+                    </li>
+                    {{ $current = "v1.36.3+k3s1" }}
+                    {{ $latest = (.Subrequest "k3s").JSON.String "tag_name" }}
+                    <li class="flex justify-between">
+                      <span>k3s</span>
+                      <a href="{{ (.Subrequest "k3s").JSON.String "html_url" }}" target="_blank">
+                        {{ if eq $current $latest }}{{ $current }}{{ else }}{{ $current }} &rarr; {{ $latest }}{{ end }}
+                      </a>
+                    </li>
+                    {{ $current = "v1.8.3" }}
+                    {{ $latest = (.Subrequest "envoy-gateway").JSON.String "tag_name" }}
+                    <li class="flex justify-between">
+                      <span>Envoy Gateway</span>
+                      <a href="{{ (.Subrequest "envoy-gateway").JSON.String "html_url" }}" target="_blank">
+                        {{ if eq $current $latest }}{{ $current }}{{ else }}{{ $current }} &rarr; {{ $latest }}{{ end }}
+                      </a>
+                    </li>
+                    {{ $current = "v1.21.1" }}
+                    {{ $latest = (.Subrequest "cert-manager").JSON.String "tag_name" }}
+                    <li class="flex justify-between">
+                      <span>cert-manager</span>
+                      <a href="{{ (.Subrequest "cert-manager").JSON.String "html_url" }}" target="_blank">
+                        {{ if eq $current $latest }}{{ $current }}{{ else }}{{ $current }} &rarr; {{ $latest }}{{ end }}
+                      </a>
+                    </li>
+                  </ul>
