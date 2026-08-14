@@ -30,6 +30,7 @@ data:
                     url: https://habits.aiectomy.xyz
                   - title: Plex
                     url: https://plex.aiectomy.xyz
+                    check-url: https://plex.aiectomy.xyz/identity
                   - title: qBittorrent
                     url: https://qbittorrent.aiectomy.xyz
 
