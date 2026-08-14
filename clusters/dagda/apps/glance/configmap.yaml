@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: glance-config
+  namespace: glance
+data:
+  glance.yml: |
+    pages:
+      - name: Home
+        columns:
+          - size: small
+            widgets:
+              - type: calendar
+                first-day-of-week: monday
+
+              - type: weather
+                location: London, United Kingdom
+                units: metric
+                hour-format: 24h
+
+          - size: full
+            widgets:
+              - type: monitor
+                title: Homelab services
+                cache: 1m
+                sites:
+                  - title: Forgejo
+                    url: https://forgejo.aiectomy.xyz
+                  - title: Habits
+                    url: https://habits.aiectomy.xyz
+                  - title: Plex
+                    url: https://plex.aiectomy.xyz
+                  - title: qBittorrent
+                    url: https://qbittorrent.aiectomy.xyz
+
+              - type: group
+                widgets:
+                  - type: hacker-news
+                  - type: lobsters
+
+          - size: small
+            widgets:
+              - type: releases
+                cache: 1d
+                repositories:
+                  - glanceapp/glance
+                  - fluxcd/flux2
+                  - k3s-io/k3s
+                  - envoyproxy/gateway
+                  - cert-manager/cert-manager
