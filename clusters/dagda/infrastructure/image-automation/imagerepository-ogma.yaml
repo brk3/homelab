@@ -4,5 +4,5 @@ metadata:
   name: ogma
   namespace: flux-system
 spec:
-  image: ghcr.io/brk3/ogma
+  image: forgejo.aiectomy.xyz/pbourke/ogma
   interval: 1h
