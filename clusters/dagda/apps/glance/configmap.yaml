@@ -14,9 +14,21 @@ data:
                 first-day-of-week: monday
 
               - type: weather
-                location: London, United Kingdom
+                location: Dublin, Ireland
                 units: metric
                 hour-format: 24h
+
+              - type: clock
+                hour-format: 24h
+                timezones:
+                  - timezone: America/New_York
+                    label: New York
+                  - timezone: America/New_York
+                    label: East US
+                  - timezone: America/Los_Angeles
+                    label: West US
+                  - timezone: Asia/Kolkata
+                    label: Hyderabad
 
           - size: full
             widgets:
@@ -41,6 +53,16 @@ data:
 
           - size: small
             widgets:
+              - type: custom-api
+                title: Quote of the Day
+                cache: 12h
+                url: https://zenquotes.io/api/today
+                template: |
+                  <blockquote>
+                    <p>&ldquo;{{ .JSON.String "0.q" }}&rdquo;</p>
+                    <footer class="color-highlight">&mdash; {{ .JSON.String "0.a" }}</footer>
+                  </blockquote>
+
               - type: releases
                 cache: 1d
                 repositories:
