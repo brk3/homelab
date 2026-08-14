@@ -51,7 +51,7 @@ data:
                 cache: 10s
                 options:
                   view: "detailed"
-                  mode: "default"
+                  mode: "upload"
                 subrequests:
                   transfer:
                     url: http://${QBITTORRENT_IP}/api/v2/transfer/info
@@ -186,9 +186,21 @@ data:
                 widgets:
                   - type: hacker-news
                   - type: lobsters
+                  - type: rss
+                    title: BBC News
+                    feeds:
+                      - url: https://feeds.bbci.co.uk/news/rss.xml
+                        title: BBC News
 
           - size: small
             widgets:
+              - type: markets
+                markets:
+                  - symbol: ORCL
+                    name: Oracle
+                  - symbol: NOW
+                    name: ServiceNow
+
               - type: custom-api
                 title: Quote of the Day
                 cache: 12h
