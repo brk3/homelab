@@ -5,11 +5,60 @@ metadata:
   namespace: glance
 data:
   glance.yml: |
+    server:
+      assets-path: /app/config
+
+    theme:
+      background-color: 230 25 7
+      primary-color: 265 85 65
+      positive-color: 150 60 45
+      negative-color: 350 75 55
+      contrast-multiplier: 1.15
+      custom-css-file: /assets/custom.css
+
     pages:
       - name: Home
+        hide-desktop-navigation: true
+        hide-mobile-navigation: true
         columns:
           - size: small
             widgets:
+              - type: custom-api
+                title: System
+                hide-header: true
+                cache: 30s
+                subrequests:
+                  cpu:
+                    url: http://vmsingle-monitoring-victoria-metrics-k8s-stack.monitoring.svc.cluster.local:8428/api/v1/query
+                    parameters:
+                      query: (100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) or vector(0)
+                  mem:
+                    url: http://vmsingle-monitoring-victoria-metrics-k8s-stack.monitoring.svc.cluster.local:8428/api/v1/query
+                    parameters:
+                      query: ((1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100) or vector(0)
+                  disk:
+                    url: http://vmsingle-monitoring-victoria-metrics-k8s-stack.monitoring.svc.cluster.local:8428/api/v1/query
+                    parameters:
+                      query: (100 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100)) or vector(0)
+                template: |
+                  {{ $cpuVal := (.Subrequest "cpu").JSON.Float "data.result.0.value.1" }}
+                  {{ $memVal := (.Subrequest "mem").JSON.Float "data.result.0.value.1" }}
+                  {{ $diskVal := (.Subrequest "disk").JSON.Float "data.result.0.value.1" }}
+                  <div class="flex justify-between text-center">
+                    <div>
+                      <div class="size-h3 {{ if gt $cpuVal 85.0 }}color-negative{{ else }}color-highlight{{ end }}">{{ printf "%.0f%%" $cpuVal }}</div>
+                      <div class="size-h6">CPU</div>
+                    </div>
+                    <div>
+                      <div class="size-h3 {{ if gt $memVal 90.0 }}color-negative{{ else }}color-highlight{{ end }}">{{ printf "%.0f%%" $memVal }}</div>
+                      <div class="size-h6">MEM</div>
+                    </div>
+                    <div>
+                      <div class="size-h3 {{ if gt $diskVal 85.0 }}color-negative{{ else }}color-highlight{{ end }}">{{ printf "%.0f%%" $diskVal }}</div>
+                      <div class="size-h6">DISK</div>
+                    </div>
+                  </div>
+
               - type: calendar
                 first-day-of-week: monday
 
@@ -32,23 +81,103 @@ data:
 
               - type: custom-api
                 title: xkcd
+                hide-header: true
                 cache: 6h
                 url: https://xkcd.com/info.0.json
                 template: |
-                  <p class="size-h5">{{ .JSON.String "title" }}</p>
-                  <img src="{{ .JSON.String "img" }}">
+                  <a href="https://xkcd.com/{{ .JSON.Int "num" }}/" target="_blank" rel="noreferrer">
+                    <img src="{{ .JSON.String "img" }}" title="{{ .JSON.String "alt" }}" style="width:100%;border-radius:10px;">
+                  </a>
 
           - size: full
             widgets:
-              - type: repository
-                title: Homelab commits
-                repository: brk3/homelab
-                pull-requests-limit: -1
-                issues-limit: -1
-                commits-limit: 5
+              - type: bookmarks
+                hide-header: true
+                groups:
+                  - title: Homelab
+                    color: 265 85 65
+                    links:
+                      - title: Forgejo
+                        url: https://forgejo.aiectomy.xyz
+                        icon: si:forgejo
+                      - title: Grafana
+                        url: https://grafana.aiectomy.xyz
+                        icon: si:grafana
+                      - title: Alertmanager
+                        url: https://alertmanager.aiectomy.xyz
+                      - title: Habits
+                        url: https://habits.aiectomy.xyz
+                  - title: Media
+                    color: 265 85 65
+                    links:
+                      - title: Plex
+                        url: https://plex.aiectomy.xyz
+                        icon: si:plex
+                      - title: qBittorrent
+                        url: https://qbittorrent.aiectomy.xyz
+                        icon: si:qbittorrent
+
+              - type: group
+                widgets:
+                  - type: custom-api
+                    title: Homelab
+                    cache: 10m
+                    url: https://api.github.com/repos/brk3/homelab/commits?per_page=20
+                    headers:
+                      Accept: application/vnd.github+json
+                    template: |
+                      <ul class="list collapsible-container" data-collapse-after="5" style="--list-gap: 12px;">
+                        {{ range $c := .JSON.Array "" }}
+                          <li>
+                            <a href="{{ $c.String "html_url" }}" target="_blank" rel="noreferrer" class="color-highlight text-truncate block">{{ $c.String "commit.message" }}</a>
+                            <div class="size-h6 color-subdue">{{ $c.String "commit.author.name" }}</div>
+                          </li>
+                        {{ end }}
+                      </ul>
+                  - type: custom-api
+                    title: Ogma
+                    cache: 10m
+                    url: https://api.github.com/repos/brk3/ogma/commits?per_page=20
+                    headers:
+                      Accept: application/vnd.github+json
+                    template: |
+                      <ul class="list collapsible-container" data-collapse-after="5" style="--list-gap: 12px;">
+                        {{ range $c := .JSON.Array "" }}
+                          <li>
+                            <a href="{{ $c.String "html_url" }}" target="_blank" rel="noreferrer" class="color-highlight text-truncate block">{{ $c.String "commit.message" }}</a>
+                            <div class="size-h6 color-subdue">{{ $c.String "commit.author.name" }}</div>
+                          </li>
+                        {{ end }}
+                      </ul>
+                  - type: custom-api
+                    title: Brigid
+                    cache: 10m
+                    url: https://api.github.com/repos/brk3/brigid/commits?per_page=20
+                    headers:
+                      Accept: application/vnd.github+json
+                    template: |
+                      <ul class="list collapsible-container" data-collapse-after="5" style="--list-gap: 12px;">
+                        {{ range $c := .JSON.Array "" }}
+                          <li>
+                            <a href="{{ $c.String "html_url" }}" target="_blank" rel="noreferrer" class="color-highlight text-truncate block">{{ $c.String "commit.message" }}</a>
+                            <div class="size-h6 color-subdue">{{ $c.String "commit.author.name" }}</div>
+                          </li>
+                        {{ end }}
+                      </ul>
+
+              - type: group
+                widgets:
+                  - type: hacker-news
+                  - type: lobsters
+                  - type: rss
+                    title: BBC News
+                    feeds:
+                      - url: https://feeds.bbci.co.uk/news/rss.xml
+                        title: BBC News
 
               - type: monitor
                 title: Homelab services
+                hide-header: true
                 cache: 1m
                 sites:
                   - title: Forgejo
@@ -60,9 +189,14 @@ data:
                     check-url: https://plex.aiectomy.xyz/identity
                   - title: qBittorrent
                     url: https://qbittorrent.aiectomy.xyz
+                  - title: Grafana
+                    url: https://grafana.aiectomy.xyz
+                  - title: Alertmanager
+                    url: https://alertmanager.aiectomy.xyz
 
               - type: custom-api
                 title: qBittorrent
+                hide-header: true
                 cache: 10s
                 options:
                   view: "detailed"
@@ -197,16 +331,6 @@ data:
                     </div>
                   {{ end }}
 
-              - type: group
-                widgets:
-                  - type: hacker-news
-                  - type: lobsters
-                  - type: rss
-                    title: BBC News
-                    feeds:
-                      - url: https://feeds.bbci.co.uk/news/rss.xml
-                        title: BBC News
-
           - size: small
             widgets:
               - type: html
@@ -214,6 +338,7 @@ data:
                   <img src="https://cataas.com/cat?width=400" style="width:100%;border-radius:10px;">
 
               - type: markets
+                hide-header: true
                 markets:
                   - symbol: ORCL
                     name: Oracle
@@ -222,6 +347,7 @@ data:
 
               - type: custom-api
                 title: Quote of the Day
+                hide-header: true
                 cache: 12h
                 url: https://zenquotes.io/api/today
                 template: |
@@ -232,6 +358,7 @@ data:
 
               - type: custom-api
                 title: LeetCode Daily Question
+                hide-header: true
                 cache: 6h
                 url: https://leetcode.com/graphql
                 method: POST
@@ -263,6 +390,7 @@ data:
 
               - type: custom-api
                 title: Last.fm
+                hide-header: true
                 cache: 60s
                 url: http://ws.audioscrobbler.com/2.0/
                 parameters:
@@ -289,3 +417,19 @@ data:
                       </li>
                     {{ end }}
                   </ul>
+
+  custom.css: |
+    .header-container {
+      display: none;
+    }
+
+    /* Mobile bottom bar: keep the column-switch pills and scroll-to-top,
+       drop the now-orphaned page-links hamburger and duplicate theme picker */
+    .mobile-navigation-page-links,
+    .mobile-navigation-actions {
+      display: none;
+    }
+
+    .mobile-navigation-label:has(.hamburger-icon) {
+      display: none;
+    }
