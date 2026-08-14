@@ -1,0 +1,16 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tailscale-operator
+  namespace: flux-system
+spec:
+  interval: 1h
+  targetNamespace: tailscale
+  install:
+    createNamespace: true
+  chartRef:
+    kind: OCIRepository
+    name: tailscale-operator
+  values:
+    operatorConfig:
+      hostname: dagda-tailscale-operator

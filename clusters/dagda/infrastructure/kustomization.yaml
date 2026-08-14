@@ -11,3 +11,4 @@ resources:
   - flux-operator
   - image-automation
   - smartctl-exporter
+  - tailscale
