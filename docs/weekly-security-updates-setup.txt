@@ -1,0 +1,11 @@
+Enable weekly automatic security updates (Debian)
+
+echo "unattended-upgrades unattended-upgrades/enable_auto_updates boolean true" | sudo debconf-set-selections
+
+sudo tee /etc/apt/apt.conf.d/20auto-upgrades > /dev/null <<'EOF'
+APT::Periodic::Update-Package-Lists "7";
+APT::Periodic::Unattended-Upgrade "7";
+EOF
+
+# verify
+cat /etc/apt/apt.conf.d/20auto-upgrades
