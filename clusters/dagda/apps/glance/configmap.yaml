@@ -199,8 +199,6 @@ data:
                     <footer class="color-highlight">&mdash; {{ .JSON.String "0.a" }}</footer>
                   </blockquote>
 
-          - size: small
-            widgets:
               - type: custom-api
                 title: LeetCode Daily Question
                 cache: 6h
