@@ -4,5 +4,5 @@ metadata:
   name: brigid
   namespace: flux-system
 spec:
-  image: ghcr.io/brk3/brigid
+  image: forgejo.aiectomy.xyz/pbourke/brigid
   interval: 1h
