@@ -21,6 +21,16 @@ spec:
       containers:
         - name: glance
           image: glanceapp/glance:v0.8.5@sha256:abd3a252d538f24afa0759d677d531dedccd4e4239c524202255cf72de80a2be
+          env:
+            - name: QBITTORRENT_IP
+              value: "qbittorrent.media.svc.cluster.local:8080"
+            - name: LASTFM_USERNAME
+              value: "brk3"
+            - name: LASTFM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: glance-lastfm
+                  key: LASTFM_API_KEY
           ports:
             - name: http
               containerPort: 8080
