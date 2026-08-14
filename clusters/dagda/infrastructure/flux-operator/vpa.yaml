@@ -9,4 +9,9 @@ spec:
     kind: Deployment
     name: flux-system-flux-operator
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: manager
+        maxAllowed:
+          memory: 512Mi

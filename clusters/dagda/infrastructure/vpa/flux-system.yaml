@@ -9,7 +9,12 @@ spec:
     kind: Deployment
     name: helm-controller
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: manager
+        maxAllowed:
+          memory: 512Mi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -22,7 +27,12 @@ spec:
     kind: Deployment
     name: kustomize-controller
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: manager
+        maxAllowed:
+          memory: 512Mi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -35,7 +45,12 @@ spec:
     kind: Deployment
     name: source-controller
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: manager
+        maxAllowed:
+          memory: 512Mi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -48,4 +63,9 @@ spec:
     kind: Deployment
     name: notification-controller
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: manager
+        maxAllowed:
+          memory: 256Mi

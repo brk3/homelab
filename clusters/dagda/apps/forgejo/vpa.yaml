@@ -9,7 +9,7 @@ spec:
     kind: Deployment
     name: forgejo
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
   resourcePolicy:
     containerPolicies:
       - containerName: forgejo
@@ -27,7 +27,7 @@ spec:
     kind: Deployment
     name: forgejo-runner
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
   resourcePolicy:
     containerPolicies:
       - containerName: runner

@@ -9,7 +9,7 @@ spec:
     kind: Deployment
     name: qbittorrent
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
   resourcePolicy:
     containerPolicies:
       - containerName: qbittorrent
@@ -27,7 +27,12 @@ spec:
     kind: Deployment
     name: plex
   updatePolicy:
-    updateMode: "Off"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: plex
+        maxAllowed:
+          memory: 4Gi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -40,7 +45,12 @@ spec:
     kind: Deployment
     name: ogma
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: ogma
+        maxAllowed:
+          memory: 512Mi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -53,4 +63,9 @@ spec:
     kind: Deployment
     name: brigid
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: brigid
+        maxAllowed:
+          memory: 512Mi

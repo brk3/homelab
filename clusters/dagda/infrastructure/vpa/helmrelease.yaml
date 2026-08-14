@@ -18,3 +18,7 @@ spec:
     updater:
       extraArgs:
         - --min-replicas=1
+        - --feature-gates=InPlaceOrRecreate=true
+    admissionController:
+      extraArgs:
+        - --feature-gates=InPlaceOrRecreate=true

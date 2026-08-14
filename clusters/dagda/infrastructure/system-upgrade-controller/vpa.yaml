@@ -9,4 +9,9 @@ spec:
     kind: Deployment
     name: system-upgrade-controller
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: system-upgrade-controller
+        maxAllowed:
+          memory: 512Mi

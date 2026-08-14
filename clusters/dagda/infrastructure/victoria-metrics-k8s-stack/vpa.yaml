@@ -9,7 +9,12 @@ spec:
     kind: Deployment
     name: monitoring-victoria-metrics-k8s-stack-kube-state-metrics
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: kube-state-metrics
+        maxAllowed:
+          memory: 512Mi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -22,7 +27,12 @@ spec:
     kind: Deployment
     name: vmagent-monitoring-victoria-metrics-k8s-stack
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: vmagent
+        maxAllowed:
+          memory: 1500Mi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -35,7 +45,12 @@ spec:
     kind: Deployment
     name: vmsingle-monitoring-victoria-metrics-k8s-stack
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: vmsingle
+        maxAllowed:
+          memory: 4Gi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -48,7 +63,18 @@ spec:
     kind: Deployment
     name: monitoring-victoria-metrics-k8s-stack-grafana
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: grafana
+        maxAllowed:
+          memory: 1500Mi
+      - containerName: grafana-sc-dashboard
+        maxAllowed:
+          memory: 256Mi
+      - containerName: grafana-sc-datasources
+        maxAllowed:
+          memory: 256Mi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -61,7 +87,15 @@ spec:
     kind: Deployment
     name: vmalert-monitoring-victoria-metrics-k8s-stack
   updatePolicy:
-    updateMode: "Recreate"
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: vmalert
+        maxAllowed:
+          memory: 512Mi
+      - containerName: config-reloader
+        maxAllowed:
+          memory: 256Mi
 # No VPA for vmauth-internal: its VMAuth CR (and Deployment) only renders
 # when both a metrics AND a VictoriaLogs read endpoint exist. VictoriaLogs
 # is disabled (see helmrelease.yaml), so this component is never deployed.
