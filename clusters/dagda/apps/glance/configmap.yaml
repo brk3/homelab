@@ -58,7 +58,7 @@ data:
                   user: ${LASTFM_USERNAME}
                   api_key: ${LASTFM_API_KEY}
                   format: json
-                  limit: 3
+                  limit: 2
                 template: |
                   <ul class="list list-gap-10">
                     {{ range .JSON.Array "recenttracks.track" }}
