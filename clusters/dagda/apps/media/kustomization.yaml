@@ -6,5 +6,6 @@ resources:
   - plex.yaml
   - ogma.yaml
   - brigid.yaml
+  - secret-brigid.yaml
   - vpa.yaml
   - httproutes.yaml
