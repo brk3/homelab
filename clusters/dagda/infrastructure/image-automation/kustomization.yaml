@@ -9,4 +9,8 @@ resources:
   - imagepolicy-plex.yaml
   - imagerepository-brigid.yaml
   - imagepolicy-brigid.yaml
+  - imagerepository-forgejo.yaml
+  - imagepolicy-forgejo.yaml
+  - imagerepository-forgejo-runner.yaml
+  - imagepolicy-forgejo-runner.yaml
   - imageupdateautomation.yaml

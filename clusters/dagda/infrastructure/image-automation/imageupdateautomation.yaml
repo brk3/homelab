@@ -25,5 +25,5 @@ spec:
         {{ end -}}
         {{ end -}}
   update:
-    path: ./clusters/dagda/apps/media
+    path: ./clusters/dagda/apps
     strategy: Setters

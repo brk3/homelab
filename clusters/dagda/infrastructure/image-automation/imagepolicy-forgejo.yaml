@@ -1,0 +1,14 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: forgejo
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: forgejo
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      # Constrained to the current major: Forgejo majors can need manual
+      # migration steps, unlike the media apps' open-ended ranges.
+      range: ">=16.0.0 <17.0.0"
