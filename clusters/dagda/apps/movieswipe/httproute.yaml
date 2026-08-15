@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: movieswipe
+  namespace: movieswipe
+spec:
+  parentRefs:
+    - name: eg
+      namespace: envoy-gateway-system
+  hostnames:
+    - movieswipe.aiectomy.xyz
+  rules:
+    - backendRefs:
+        - name: movieswipe
+          port: 80

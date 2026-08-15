@@ -1,0 +1,17 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: movieswipe
+  namespace: movieswipe
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: movieswipe
+  updatePolicy:
+    updateMode: "InPlaceOrRecreate"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: movieswipe
+        maxAllowed:
+          memory: 256Mi
