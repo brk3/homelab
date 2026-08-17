@@ -15,4 +15,6 @@ resources:
   - imagepolicy-forgejo-runner.yaml
   - imagerepository-glance.yaml
   - imagepolicy-glance.yaml
+  - imagerepository-movieswipe.yaml
+  - imagepolicy-movieswipe.yaml
   - imageupdateautomation.yaml
