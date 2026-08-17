@@ -19,3 +19,5 @@ spec:
   values:
     operatorConfig:
       hostname: dagda-tailscale-operator
+    proxyConfig:
+      defaultTags: "tag:k8s-operator"
