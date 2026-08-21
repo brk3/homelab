@@ -12,3 +12,4 @@ resources:
   - image-automation
   - smartctl-exporter
   - tailscale
+  - crossplane
