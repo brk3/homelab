@@ -17,4 +17,8 @@ resources:
   - imagepolicy-glance.yaml
   - imagerepository-movieswipe.yaml
   - imagepolicy-movieswipe.yaml
+  - imagerepository-habits.yaml
+  - imagepolicy-habits.yaml
+  - imagerepository-habits-frontend.yaml
+  - imagepolicy-habits-frontend.yaml
   - imageupdateautomation.yaml

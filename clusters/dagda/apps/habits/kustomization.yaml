@@ -8,6 +8,8 @@ resources:
 
 images:
   - name: ghcr.io/brk3/habits
-    newTag: v0.7.2
+    newTag: v0.7.2 # {"$imagepolicy": "flux-system:habits:tag"}
+    digest: sha256:e3de2d1420513e354d493c67633d0e6587a13ba20010cff26becd310dcf69269 # {"$imagepolicy": "flux-system:habits:digest"}
   - name: ghcr.io/brk3/habits-frontend
-    newTag: v0.7.2
+    newTag: v0.7.2 # {"$imagepolicy": "flux-system:habits-frontend:tag"}
+    digest: sha256:97da5c8eb9f07f9b806e9b6049a98d4f283d45f79dfc88acd88ed9ce68315408 # {"$imagepolicy": "flux-system:habits-frontend:digest"}
