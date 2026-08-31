@@ -19,7 +19,7 @@ spec:
     spec:
       initContainers:
         - name: register
-          image: code.forgejo.org/forgejo/runner:13.0.0@sha256:7fb853bfe73c229be6349398359c0a7bd01fadfd17c106607b2221150b799ed2 # {"$imagepolicy": "flux-system:forgejo-runner"}
+          image: code.forgejo.org/forgejo/runner:13.1.0@sha256:c4af85fd9f0dd03788676a534781a87c71aa2c6a37737143e017eb94d4312952 # {"$imagepolicy": "flux-system:forgejo-runner"}
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -46,7 +46,7 @@ spec:
               mountPath: /data
       containers:
         - name: runner
-          image: code.forgejo.org/forgejo/runner:13.0.0@sha256:7fb853bfe73c229be6349398359c0a7bd01fadfd17c106607b2221150b799ed2 # {"$imagepolicy": "flux-system:forgejo-runner"}
+          image: code.forgejo.org/forgejo/runner:13.1.0@sha256:c4af85fd9f0dd03788676a534781a87c71aa2c6a37737143e017eb94d4312952 # {"$imagepolicy": "flux-system:forgejo-runner"}
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
