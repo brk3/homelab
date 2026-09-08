@@ -70,17 +70,18 @@ spec:
                   PORT=$$(cat /tmp/gluetun/forwarded_port 2>/dev/null | tr -d '\r\n[:space:]')
                   if [ -n "$$PORT" ] && [ "$$PORT" != "$$LAST_PORT" ]; then
                     echo "Forwarded port changed: $$LAST_PORT -> $$PORT"
-                    # Attempt to update qBittorrent listen port via WebUI API
+                    IP=$$(hostname -i)
+                    # Update qBittorrent listen port via WebUI API
                     RESP=$$(curl -s -o /dev/null -w "%{http_code}" -X POST \
-                      -H "Origin: http://127.0.0.1:8080" \
-                      -H "Referer: http://127.0.0.1:8080" \
+                      -H "Origin: http://$$IP:8080" \
+                      -H "Referer: http://$$IP:8080" \
                       --data-urlencode "json={\"listen_port\":$$PORT}" \
-                      http://127.0.0.1:8080/api/v2/app/setPreferences)
+                      "http://$$IP:8080/api/v2/app/setPreferences")
                     if [ "$$RESP" = "200" ]; then
                       echo "Successfully set qBittorrent listen_port to $$PORT"
                       LAST_PORT="$$PORT"
                     else
-                      echo "Failed to update listen_port (HTTP $$RESP), will retry in 10s..."
+                      echo "Failed to update listen_port (HTTP $$RESP), will retry..."
                     fi
                   fi
                 fi
