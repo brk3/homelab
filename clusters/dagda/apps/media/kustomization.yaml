@@ -7,5 +7,6 @@ resources:
   - ogma.yaml
   - brigid.yaml
   - secret-brigid.yaml
+  - secret-gluetun.yaml
   - vpa.yaml
   - httproutes.yaml

@@ -28,6 +28,73 @@ spec:
             - name: media
               mountPath: /data
       containers:
+        - name: gluetun
+          image: qmcgaw/gluetun:v3.40.3
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          envFrom:
+            - secretRef:
+                name: gluetun-credentials
+          env:
+            - name: VPN_PORT_FORWARDING
+              value: "on"
+            - name: VPN_PORT_FORWARDING_PROVIDER
+              value: "protonvpn"
+            - name: FIREWALL_INPUT_PORTS
+              value: "8080"
+            - name: FIREWALL_OUTBOUND_SUBNETS
+              value: "10.42.0.0/16,10.43.0.0/16,192.168.0.0/24"
+            - name: DOT
+              value: "off"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          volumeMounts:
+            - name: gluetun-shared
+              mountPath: /tmp/gluetun
+        - name: qbit-port-forward
+          image: alpine/curl:8.12.1
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Starting qBittorrent port-forwarding sync loop..."
+              LAST_PORT=""
+              while true; do
+                if [ -f /tmp/gluetun/forwarded_port ]; then
+                  PORT=$$(cat /tmp/gluetun/forwarded_port 2>/dev/null | tr -d '\r\n[:space:]')
+                  if [ -n "$$PORT" ] && [ "$$PORT" != "$$LAST_PORT" ]; then
+                    echo "Forwarded port changed: $$LAST_PORT -> $$PORT"
+                    # Attempt to update qBittorrent listen port via WebUI API
+                    RESP=$$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+                      -H "Origin: http://127.0.0.1:8080" \
+                      -H "Referer: http://127.0.0.1:8080" \
+                      --data-urlencode "json={\"listen_port\":$$PORT}" \
+                      http://127.0.0.1:8080/api/v2/app/setPreferences)
+                    if [ "$$RESP" = "200" ]; then
+                      echo "Successfully set qBittorrent listen_port to $$PORT"
+                      LAST_PORT="$$PORT"
+                    else
+                      echo "Failed to update listen_port (HTTP $$RESP), will retry in 10s..."
+                    fi
+                  fi
+                fi
+                sleep 15
+              done
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 32Mi
+          volumeMounts:
+            - name: gluetun-shared
+              mountPath: /tmp/gluetun
         - name: qbittorrent
           image: lscr.io/linuxserver/qbittorrent:5.2.3@sha256:b6ab43fe86039e5bdd3cc0b59b946414fcff0c8183e93636e6cb438fdac45028 # {"$imagepolicy": "flux-system:qbittorrent"}
           env:
@@ -48,19 +115,11 @@ spec:
           ports:
             - name: webui
               containerPort: 8080
-            - name: torrent-tcp
-              containerPort: 6881
-              hostPort: 6881
-              protocol: TCP
-            - name: torrent-udp
-              containerPort: 6881
-              hostPort: 6881
-              protocol: UDP
           readinessProbe:
             httpGet:
               path: /
               port: webui
-            initialDelaySeconds: 10
+            initialDelaySeconds: 15
             periodSeconds: 10
           livenessProbe:
             httpGet:
@@ -75,6 +134,8 @@ spec:
             - name: media
               mountPath: /data
       volumes:
+        - name: gluetun-shared
+          emptyDir: {}
         - name: config
           hostPath:
             path: /mnt/k3s-data/appdata/qbittorrent
