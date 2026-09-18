@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
   - envoy-gateway
   - cert-manager
-  #- kubevirt
   - vpa
   - victoria-metrics-k8s-stack
   - notifications
@@ -13,3 +12,4 @@ resources:
   - smartctl-exporter
   - tailscale
   - crossplane
+  - kured

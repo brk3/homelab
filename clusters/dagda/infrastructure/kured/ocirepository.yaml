@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: kured
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: oci://ghcr.io/kubereboot/charts/kured
+  ref:
+    tag: 6.1.0

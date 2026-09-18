@@ -1,0 +1,14 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: kured
+  namespace: kured
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kured
+      app.kubernetes.io/instance: kured
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 60s
