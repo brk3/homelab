@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: kured
-      app.kubernetes.io/instance: kured
+      app.kubernetes.io/instance: kured-kured
   endpoints:
     - port: metrics
       path: /metrics
