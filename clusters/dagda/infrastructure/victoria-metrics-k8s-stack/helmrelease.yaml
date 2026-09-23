@@ -66,6 +66,13 @@ spec:
     #         memory: 500Mi
     vmagent:
       spec:
+        extraArgs:
+          # k3s dual-stack advertises an IPv6 kube-apiserver endpoint that
+          # vmagent can't dial without this flag. With enableTCP6, vmagent
+          # uses Happy Eyeballs: tries IPv6 first, falls back to IPv4 within
+          # ~300ms, so the target stays up instead of firing
+          # KubeAPIInstanceUnreachable / TargetDown / RecordingRulesNoData.
+          enableTCP6: "true"
         resources:
           requests:
             cpu: 150m
