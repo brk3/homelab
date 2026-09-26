@@ -1,0 +1,5 @@
+# /etc/rancher/k3s/config.yaml
+disable:
+  - traefik
+data-dir: /mnt/k3s-data/rancher
+write-kubeconfig-mode: "644"
