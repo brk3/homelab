@@ -3,6 +3,8 @@ kind: Kustomization
 resources:
   - imagerepository-qbittorrent.yaml
   - imagepolicy-qbittorrent.yaml
+  - imagerepository-gluetun.yaml
+  - imagepolicy-gluetun.yaml
   - imagerepository-ogma.yaml
   - imagepolicy-ogma.yaml
   - imagerepository-plex.yaml

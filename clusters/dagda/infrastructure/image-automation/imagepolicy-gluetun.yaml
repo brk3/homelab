@@ -1,0 +1,13 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: gluetun
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: gluetun
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      # patch-only for the pilot; widen once you trust the automation
+      range: ">=3.40.3 <3.41.0"
