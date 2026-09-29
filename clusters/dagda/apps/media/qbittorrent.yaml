@@ -85,7 +85,7 @@ spec:
             limits:
               memory: 256Mi
         - name: qbittorrent
-          image: lscr.io/linuxserver/qbittorrent:5.2.3@sha256:b6ab43fe86039e5bdd3cc0b59b946414fcff0c8183e93636e6cb438fdac45028 # {"$imagepolicy": "flux-system:qbittorrent"}
+          image: lscr.io/linuxserver/qbittorrent:5.2.4@sha256:b522f9f4b769f8f36d49d22d5eb6a92e9aa18904c6a1830b1439df511ec21983 # {"$imagepolicy": "flux-system:qbittorrent"}
           securityContext:
             allowPrivilegeEscalation: false
             seccompProfile:
