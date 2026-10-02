@@ -1,14 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 resources:
   - https://forgejo.aiectomy.xyz/pbourke/movieswipe.git//deploy/kustomize/base?ref=main
   - httproute.yaml
   - vpa.yaml
   - secret-api-keys.yaml
-
 images:
   - name: ghcr.io/brk3/movieswipe
     newName: forgejo.aiectomy.xyz/pbourke/movieswipe
-    newTag: v0.1.0 # {"$imagepolicy": "flux-system:movieswipe:tag"}
-    digest: sha256:0171a8017d3193d0f9da63047d9f88f3d2dfcf893ca2da9d82cd25c8f165fd9d # {"$imagepolicy": "flux-system:movieswipe:digest"}
+    newTag: v0.1.1 # {"$imagepolicy": "flux-system:movieswipe:tag"}
+    digest: sha256:04a065481444ddb87314ad6a5665406db4a1c4f12149781d32a9677b715d6a01 # {"$imagepolicy": "flux-system:movieswipe:digest"}
