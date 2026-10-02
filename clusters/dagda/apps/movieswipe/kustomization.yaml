@@ -8,5 +8,5 @@ resources:
 images:
   - name: ghcr.io/brk3/movieswipe
     newName: forgejo.aiectomy.xyz/pbourke/movieswipe
-    newTag: v0.1.1 # {"$imagepolicy": "flux-system:movieswipe:tag"}
-    digest: sha256:04a065481444ddb87314ad6a5665406db4a1c4f12149781d32a9677b715d6a01 # {"$imagepolicy": "flux-system:movieswipe:digest"}
+    newTag: v0.1.2 # {"$imagepolicy": "flux-system:movieswipe:tag"}
+    digest: sha256:3b0499472588b43c8a057e46e1d9ec51c9930d9a8c3974ac01a4f45a721c25e6 # {"$imagepolicy": "flux-system:movieswipe:digest"}
