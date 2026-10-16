@@ -22,7 +22,7 @@ spec:
         runAsGroup: 1000
       containers:
         - name: brigid
-          image: forgejo.aiectomy.xyz/pbourke/brigid:v0.1.9@sha256:8df38a968afa6027e0e4a3c8c278490a17976e07204a98c04e329ce0b4f0fc61 # {"$imagepolicy": "flux-system:brigid"}
+          image: forgejo.aiectomy.xyz/pbourke/brigid:v0.1.10@sha256:963a67803107eede73841f2d0364659657c65b55543f1ab0cb93ab2c9ed56e92 # {"$imagepolicy": "flux-system:brigid"}
           envFrom:
             - secretRef:
                 name: brigid-provider-credentials
