@@ -13,6 +13,7 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: habits-frontend
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 256Mi
 ---
@@ -31,5 +32,6 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: habits-server
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 256Mi

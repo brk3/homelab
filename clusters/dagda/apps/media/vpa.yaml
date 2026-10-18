@@ -13,9 +13,11 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: qbittorrent
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 4Gi
       - containerName: gluetun
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 256Mi
 ---
@@ -34,9 +36,11 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: plex
-        controlledValues: RequestsAndLimits
+        # RequestsOnly: VPA only touches requests; the deployment's 4Gi limit stays put.
+        # maxAllowed caps the request so it can always schedule (node has ~1.6Gi free).
+        controlledValues: RequestsOnly
         maxAllowed:
-          memory: 4Gi
+          memory: 1500Mi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -53,6 +57,7 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: ogma
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 512Mi
 ---
@@ -71,5 +76,6 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: brigid
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 512Mi

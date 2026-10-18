@@ -13,5 +13,6 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: system-upgrade-controller
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 512Mi

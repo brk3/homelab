@@ -13,6 +13,7 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: manager
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 512Mi
 ---
@@ -31,6 +32,7 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: manager
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 512Mi
 ---
@@ -49,6 +51,7 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: manager
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 512Mi
 ---
@@ -67,5 +70,6 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: manager
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 256Mi

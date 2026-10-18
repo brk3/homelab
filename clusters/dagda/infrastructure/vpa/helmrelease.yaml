@@ -14,6 +14,9 @@ spec:
   values:
     # Full deployment (recommender + updater + admission controller) so
     # VPAs with updateMode: Recreate can evict/restart pods to apply sizing.
+    # All VPAs use controlledValues: RequestsOnly so the updater never lowers
+    # cgroup limits; VPA-set limits were OOM-killing pods while the node had
+    # free memory.
     recommenderOnly: false
     updater:
       extraArgs:

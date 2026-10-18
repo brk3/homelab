@@ -13,6 +13,7 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: forgejo
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 1500Mi
 ---
@@ -31,8 +32,10 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: runner
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 512Mi
       - containerName: dind
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 2Gi

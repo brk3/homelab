@@ -13,6 +13,7 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: virt-operator
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 512Mi
 ---
@@ -31,6 +32,7 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: virt-api
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 512Mi
 ---
@@ -49,5 +51,6 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: virt-controller
+        controlledValues: RequestsOnly
         maxAllowed:
           memory: 512Mi
