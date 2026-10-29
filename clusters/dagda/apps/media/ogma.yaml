@@ -22,7 +22,7 @@ spec:
         runAsGroup: 1000
       containers:
         - name: ogma
-          image: forgejo.aiectomy.xyz/pbourke/ogma:v0.1.5@sha256:7f6d1393b5f459c8cdfdc509803f89acbde162979efdd118feda3ff96cf9be1b # {"$imagepolicy": "flux-system:ogma"}
+          image: forgejo.aiectomy.xyz/pbourke/ogma:v0.1.6@sha256:17c2daa7fcfbb1aaf3871ad2947c7ea6a61d7018e3eefdda4eb4778b8957d4e4 # {"$imagepolicy": "flux-system:ogma"}
           env:
             - name: WATCH_DIR
               value: "/data/downloads/complete"
