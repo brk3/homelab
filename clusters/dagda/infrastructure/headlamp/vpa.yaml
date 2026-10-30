@@ -7,7 +7,7 @@ spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: headlamp
+    name: headlamp-headlamp
   updatePolicy:
     updateMode: "InPlaceOrRecreate"
   resourcePolicy:
