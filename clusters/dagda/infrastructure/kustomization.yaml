@@ -12,3 +12,4 @@ resources:
   - smartctl-exporter
   - tailscale
   - kured
+  - headlamp
