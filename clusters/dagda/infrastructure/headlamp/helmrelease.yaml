@@ -17,9 +17,6 @@ spec:
         name: headlamp
         namespace: flux-system
   values:
-    # WARNING: no login. Every visitor is authenticated as the pod's service
-    # account, which is bound to cluster-admin. Publicly routed at
-    # headlamp.aiectomy.xyz - anyone who finds it owns the cluster.
     config:
       unsafeUseServiceAccountToken: true
     httpRoute:
