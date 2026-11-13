@@ -1,4 +1,4 @@
-apiVersion: notification.toolkit.fluxcd.io/v1beta3
+apiVersion: notification.toolkit.fluxcd.io/v1
 kind: Provider
 metadata:
   name: telegram
@@ -8,3 +8,18 @@ spec:
   channel: "1506252315"
   secretRef:
     name: flux-telegram-token
+---
+apiVersion: notification.toolkit.fluxcd.io/v1
+kind: Alert
+metadata:
+  name: errors
+  namespace: flux-system
+spec:
+  providerRef:
+    name: telegram
+  eventSeverity: error
+  eventSources:
+    - kind: Kustomization
+      name: "*"
+    - kind: HelmRelease
+      name: "*"
