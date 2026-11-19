@@ -2,7 +2,10 @@
 
 Everything but two secrets is git-native: Flux reconciles `clusters/dagda`, and app/infra
 secrets are SOPS-encrypted alongside the components that use them (`apps` and
-`infrastructure` Kustomizations both carry `spec.decryption`).
+`infrastructure` Kustomizations both carry `spec.decryption`). A few third-party
+manifests (cert-manager, flux-operator, VPA, Tailscale CRDs) are pinned by remote URL in
+their kustomizations rather than vendored, so reconciliation needs network access to
+GitHub and the image registries.
 
 ## If dagda is lost entirely
 
@@ -10,8 +13,7 @@ secrets are SOPS-encrypted alongside the components that use them (`apps` and
 2. Recreate the hostPath dirs apps expect under `/mnt/k3s-data/appdata/<app>`, owned `1000:1000`.
 3. Install flux-operator — it can't bootstrap itself from git:
    ```
-   helm install flux-operator oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator \
-     -n flux-system --create-namespace
+   kubectl apply -f https://github.com/controlplaneio-fluxcd/flux-operator/releases/download/v0.62.1/install.yaml
    ```
 4. Recreate the two bootstrap secrets below, from the password manager.
 5. `kubectl apply -f clusters/dagda/flux-system/flux-instance.yaml`

@@ -1,7 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ocirepository.yaml
-  - helmrelease.yaml
+  - https://github.com/cert-manager/cert-manager/releases/download/v1.21.1/cert-manager.yaml
   - clusterissuer.yaml
   - secret.yaml

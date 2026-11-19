@@ -12,7 +12,7 @@ spec:
     name: flux-system
   dependsOn:
     - name: infrastructure
-  wait: true
+  wait: false
   timeout: 5m
   decryption:
     provider: sops

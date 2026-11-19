@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: vpa
+resources:
+  - https://raw.githubusercontent.com/kubernetes/autoscaler/vertical-pod-autoscaler-1.7.1/vertical-pod-autoscaler/deploy/vpa-v1-crd-gen.yaml
+  - https://raw.githubusercontent.com/kubernetes/autoscaler/vertical-pod-autoscaler-1.7.1/vertical-pod-autoscaler/deploy/vpa-rbac.yaml
+  - https://raw.githubusercontent.com/kubernetes/autoscaler/vertical-pod-autoscaler-1.7.1/vertical-pod-autoscaler/deploy/recommender-deployment.yaml
+  - https://raw.githubusercontent.com/kubernetes/autoscaler/vertical-pod-autoscaler-1.7.1/vertical-pod-autoscaler/deploy/updater-deployment.yaml
+  - https://raw.githubusercontent.com/kubernetes/autoscaler/vertical-pod-autoscaler-1.7.1/vertical-pod-autoscaler/deploy/admission-controller-deployment.yaml
+  - https://raw.githubusercontent.com/kubernetes/autoscaler/vertical-pod-autoscaler-1.7.1/vertical-pod-autoscaler/deploy/admission-controller-service.yaml
+  - certificate.yaml
+  - webhook.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: vpa-updater
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args
+        value:
+          - --min-replicas=1
+          - --feature-gates=InPlace=true
+  - target:
+      kind: Deployment
+      name: vpa-admission-controller
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/args
+        value:
+          - --v=4
+          - --port=8000
+          - --address=:8944
+          - --register-webhook=false
+          - --client-ca-file=/etc/tls-certs/ca.crt
+          - --tls-cert-file=/etc/tls-certs/tls.crt
+          - --tls-private-key=/etc/tls-certs/tls.key
+          - --feature-gates=InPlace=true

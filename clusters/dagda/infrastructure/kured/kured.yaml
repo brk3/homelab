@@ -1,0 +1,218 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kured-kured
+  namespace: kured
+  labels:
+    app.kubernetes.io/name: kured
+    app.kubernetes.io/instance: kured-kured
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kured-kured
+  labels:
+    app.kubernetes.io/name: kured
+    app.kubernetes.io/instance: kured-kured
+rules:
+  # Allow kured to read spec.unschedulable
+  # Allow kubectl to drain/uncordon
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "patch"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list", "delete", "get"]
+  - apiGroups: ["extensions"]
+    resources: ["daemonsets"]
+    verbs: ["get"]
+  - apiGroups: ["apps"]
+    resources: ["daemonsets"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["pods/eviction"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kured-kured
+  labels:
+    app.kubernetes.io/name: kured
+    app.kubernetes.io/instance: kured-kured
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kured-kured
+subjects:
+  - kind: ServiceAccount
+    name: kured-kured
+    namespace: kured
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kured-kured
+  namespace: kured
+  labels:
+    app.kubernetes.io/name: kured
+    app.kubernetes.io/instance: kured-kured
+rules:
+  # Allow kured to lock/unlock itself
+  - apiGroups: ["extensions"]
+    resources: ["daemonsets"]
+    resourceNames: ["kured-kured"]
+    verbs: ["update", "patch"]
+  - apiGroups: ["apps"]
+    resources: ["daemonsets"]
+    resourceNames: ["kured-kured"]
+    verbs: ["update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kured-kured
+  namespace: kured
+  labels:
+    app.kubernetes.io/name: kured
+    app.kubernetes.io/instance: kured-kured
+subjects:
+  - kind: ServiceAccount
+    name: kured-kured
+    namespace: kured
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: kured-kured
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kured-kured
+  namespace: kured
+  labels:
+    app.kubernetes.io/name: kured
+    app.kubernetes.io/instance: kured-kured
+spec:
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 8080
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/name: kured
+    app.kubernetes.io/instance: kured-kured
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kured-kured
+  namespace: kured
+  labels:
+    app.kubernetes.io/name: kured
+    app.kubernetes.io/instance: kured-kured
+spec:
+  revisionHistoryLimit: 10
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kured
+      app.kubernetes.io/instance: kured-kured
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kured
+        app.kubernetes.io/instance: kured-kured
+    spec:
+      serviceAccountName: kured-kured
+      hostNetwork: false
+      hostPID: true
+      restartPolicy: Always
+      containers:
+        - name: kured
+          image: ghcr.io/kubereboot/kured:1.23.0
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+            readOnlyRootFilesystem: true
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          command:
+            - /usr/bin/kured
+          args:
+            - --ds-name=kured-kured
+            - --ds-namespace=kured
+            - --metrics-port=8080
+            - --alert-filter-regexp=^(Watchdog|InfoInhibitor|RecordingRulesNoData)$
+            - --alert-firing-only=true
+            - --end-time=05:00
+            - --period=15m
+            - --force-reboot
+            - --drain-timeout=5m
+            - --skip-wait-for-delete-timeout=60
+            - --prometheus-url=http://vmsingle-monitoring-victoria-metrics-k8s-stack.monitoring.svc:8428
+            - --reboot-sentinel=/sentinel/reboot-required
+            - --reboot-command=/bin/systemctl reboot
+            - --start-time=03:00
+            - --time-zone=Europe/Dublin
+            - --annotate-nodes=true
+            - --log-format=text
+            - --concurrency=1
+          volumeMounts:
+            - name: sentinel
+              mountPath: /sentinel
+              readOnly: true
+          ports:
+            - name: metrics
+              containerPort: 8080
+          env:
+            # Pass in the name of the node on which this pod is scheduled
+            # for use with drain/uncordon operations and lock acquisition
+            - name: KURED_NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: KURED_NOTIFY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: kured-secret
+                  key: notify-url
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /metrics
+              port: metrics
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /metrics
+              port: metrics
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+        - name: sentinel
+          hostPath:
+            path: /var/run
+            type: Directory
