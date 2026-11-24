@@ -1,8 +1,0 @@
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImageRepository
-metadata:
-  name: headlamp
-  namespace: flux-system
-spec:
-  image: ghcr.io/headlamp-k8s/headlamp
-  interval: 1h

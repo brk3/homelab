@@ -15,9 +15,6 @@ spec:
   values:
     deployment:
       envoyGateway:
-        image:
-          repository: docker.io/envoyproxy/gateway # {"$imagepolicy": "flux-system:envoy-gateway:name"}
-          tag: v1.10.0 # {"$imagepolicy": "flux-system:envoy-gateway:tag"}
         resources:
           limits:
             memory: 512Mi

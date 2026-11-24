@@ -1,8 +1,0 @@
-apiVersion: image.toolkit.fluxcd.io/v1
-kind: ImageRepository
-metadata:
-  name: envoy-gateway
-  namespace: flux-system
-spec:
-  image: docker.io/envoyproxy/gateway
-  interval: 1h

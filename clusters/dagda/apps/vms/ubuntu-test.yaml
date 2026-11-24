@@ -38,7 +38,7 @@ spec:
         # copy-on-write overlay on dagda's local disk and are LOST on every restart.
         - name: rootdisk
           containerDisk:
-            image: quay.io/containerdisks/ubuntu:26.04@sha256:d85042a1fc65065749f23980d4345c507af3b5134a540f31293cc4c38024238d # {"$imagepolicy": "flux-system:ubuntu-containerdisk"}
+            image: quay.io/containerdisks/ubuntu:24.04
         - name: cloudinitdisk
           cloudInitNoCloud:
             # SSH key only, no password — this repo is public. Serial console login
