@@ -4,6 +4,8 @@ resources:
   - ocirepository.yaml
   - helmrelease.yaml
   - gatewayclass.yaml
+  - envoyproxy.yaml
+  - rbac-envoyproxy-status.yaml
   - certificate.yaml
   - gateway.yaml
   - vpa.yaml

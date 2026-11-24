@@ -4,3 +4,52 @@ resources:
   - https://github.com/cert-manager/cert-manager/releases/download/v1.21.1/cert-manager.yaml
   - clusterissuer.yaml
   - secret.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: cert-manager
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: cert-manager
+      spec:
+        template:
+          spec:
+            containers:
+              - name: cert-manager-controller
+                resources:
+                  requests:
+                    memory: 128Mi
+  - target:
+      kind: Deployment
+      name: cert-manager-cainjector
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: cert-manager-cainjector
+      spec:
+        template:
+          spec:
+            containers:
+              - name: cert-manager-cainjector
+                resources:
+                  requests:
+                    memory: 160Mi
+  - target:
+      kind: Deployment
+      name: cert-manager-webhook
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: cert-manager-webhook
+      spec:
+        template:
+          spec:
+            containers:
+              - name: cert-manager-webhook
+                resources:
+                  requests:
+                    memory: 96Mi

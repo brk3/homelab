@@ -26,6 +26,28 @@ spec:
           - op: replace
             path: /spec/template/spec/containers/0/resources/limits/memory
             value: 400Mi
+      - target:
+          kind: Deployment
+          name: image-reflector-controller
+        patch: |
+          - op: add
+            path: /spec/template/spec/containers/0/resources/requests
+            value:
+              memory: 192Mi
+          - op: replace
+            path: /spec/template/spec/containers/0/resources/limits/memory
+            value: 512Mi
+      - target:
+          kind: Deployment
+          name: image-automation-controller
+        patch: |
+          - op: add
+            path: /spec/template/spec/containers/0/resources/requests
+            value:
+              memory: 96Mi
+          - op: replace
+            path: /spec/template/spec/containers/0/resources/limits/memory
+            value: 512Mi
   sync:
     kind: GitRepository
     url: "https://github.com/brk3/homelab.git"

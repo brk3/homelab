@@ -3,3 +3,11 @@ kind: Kustomization
 resources:
   - https://github.com/controlplaneio-fluxcd/flux-operator/releases/download/v0.62.1/install.yaml
   - vpa.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: flux-operator
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 512Mi

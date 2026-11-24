@@ -4,6 +4,7 @@ metadata:
   name: home-lan
 spec:
   hostname: dagda-home-lan
+  proxyClass: home-lan
   subnetRouter:
     advertiseRoutes:
       - "192.168.0.0/24"
