@@ -59,7 +59,7 @@ spec:
       - containerName: ogma
         controlledValues: RequestsOnly
         maxAllowed:
-          memory: 512Mi
+          memory: 256Mi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler

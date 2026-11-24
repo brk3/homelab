@@ -15,4 +15,4 @@ spec:
       - containerName: glance
         controlledValues: RequestsOnly
         maxAllowed:
-          memory: 256Mi
+          memory: 128Mi

@@ -13,6 +13,18 @@ resources:
 patches:
   - target:
       kind: Deployment
+      name: vpa-recommender
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args
+        value:
+          # Default 250Mi floor, which VPA applies even to idle containers.
+          - --pod-recommendation-min-memory-mb=64
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: 128Mi
+  - target:
+      kind: Deployment
       name: vpa-updater
     patch: |-
       - op: add
@@ -20,6 +32,9 @@ patches:
         value:
           - --min-replicas=1
           - --feature-gates=InPlace=true
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: 128Mi
   - target:
       kind: Deployment
       name: vpa-admission-controller
@@ -35,3 +50,6 @@ patches:
           - --tls-cert-file=/etc/tls-certs/tls.crt
           - --tls-private-key=/etc/tls-certs/tls.key
           - --feature-gates=InPlace=true
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: 96Mi
