@@ -12,4 +12,6 @@ spec:
   digestReflectionPolicy: IfNotPresent
   policy:
     semver:
-      range: ">=0.60.0 <1.0.0"
+      # Chart 0.87.0 ships operator v0.73.x CRDs; newer operators wait
+      # for vldistributed CRD and crashloop. Raise with the chart.
+      range: ">=0.73.0 <0.74.0"
