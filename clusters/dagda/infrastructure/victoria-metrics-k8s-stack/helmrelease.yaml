@@ -134,7 +134,7 @@ spec:
     victoria-metrics-operator:
       image:
         repository: victoriametrics/operator # {"$imagepolicy": "flux-system:victoria-metrics-operator:name"}
-        tag: v0.73.1 # {"$imagepolicy": "flux-system:victoria-metrics-operator:tag"}
+        tag: v0.75.2 # {"$imagepolicy": "flux-system:victoria-metrics-operator:tag"}
       resources:
         requests:
           cpu: 20m
