@@ -17,4 +17,4 @@ spec:
       envoyGateway:
         image:
           repository: docker.io/envoyproxy/gateway # {"$imagepolicy": "flux-system:envoy-gateway:name"}
-          tag: v1.8.3 # {"$imagepolicy": "flux-system:envoy-gateway:tag"}
+          tag: v1.10.0 # {"$imagepolicy": "flux-system:envoy-gateway:tag"}

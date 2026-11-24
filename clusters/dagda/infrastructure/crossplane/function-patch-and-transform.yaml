@@ -3,4 +3,4 @@ kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
-  package: ghcr.io/crossplane-contrib/function-patch-and-transform:v0.9.1 # {"$imagepolicy": "flux-system:crossplane-function-patch-and-transform"}
+  package: ghcr.io/crossplane-contrib/function-patch-and-transform:v0.11.3@sha256:66a95d9bda6639278b8cb65eeb6ae56a4514655cd28908b14ff24dddbaf821aa # {"$imagepolicy": "flux-system:crossplane-function-patch-and-transform"}

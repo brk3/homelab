@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: provider-kubernetes
 spec:
-  package: ghcr.io/crossplane-contrib/provider-kubernetes:v1.3.0 # {"$imagepolicy": "flux-system:crossplane-provider-kubernetes"}
+  package: ghcr.io/crossplane-contrib/provider-kubernetes:v1.4.1@sha256:19bac959b88d49fee4f1b2cc76a085210a4663aff04a9d1a307ac7339e2ae82a # {"$imagepolicy": "flux-system:crossplane-provider-kubernetes"}
