@@ -133,7 +133,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: kured
-          image: ghcr.io/kubereboot/kured:1.23.0
+          image: ghcr.io/kubereboot/kured:1.23.0 # {"$imagepolicy": "flux-system:kured"}
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true

@@ -1,0 +1,15 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: smartctl-exporter
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: smartctl-exporter
+  filterTags:
+    pattern: '^v\d+\.\d+\.\d+$'
+    extract: '$0'
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: ">=0.7.0"

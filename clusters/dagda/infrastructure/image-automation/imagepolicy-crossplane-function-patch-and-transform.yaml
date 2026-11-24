@@ -1,0 +1,15 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: crossplane-function-patch-and-transform
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: crossplane-function-patch-and-transform
+  filterTags:
+    pattern: '^v\d+\.\d+\.\d+$'
+    extract: '$0'
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: ">=0.8.0 <1.0.0"

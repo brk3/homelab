@@ -1,0 +1,15 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: kured
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: kured
+  filterTags:
+    pattern: '^\d+\.\d+\.\d+$'
+    extract: '$0'
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: ">=1.16.0"

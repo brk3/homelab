@@ -1,0 +1,15 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: crossplane-provider-kubernetes
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: crossplane-provider-kubernetes
+  filterTags:
+    pattern: '^v\d+\.\d+\.\d+$'
+    extract: '$0'
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: ">=1.0.0 <2.0.0"

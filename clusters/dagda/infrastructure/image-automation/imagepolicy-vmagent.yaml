@@ -1,0 +1,15 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: vmagent
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: vmagent
+  filterTags:
+    pattern: '^v\d+\.\d+\.\d+$'
+    extract: '$0'
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    semver:
+      range: ">=1.148.0 <2.0.0"

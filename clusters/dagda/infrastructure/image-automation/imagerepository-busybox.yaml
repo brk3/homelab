@@ -1,0 +1,8 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: busybox
+  namespace: flux-system
+spec:
+  image: busybox
+  interval: 1h

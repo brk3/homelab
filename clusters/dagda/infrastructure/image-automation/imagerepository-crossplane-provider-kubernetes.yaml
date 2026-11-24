@@ -1,0 +1,8 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: crossplane-provider-kubernetes
+  namespace: flux-system
+spec:
+  image: ghcr.io/crossplane-contrib/provider-kubernetes
+  interval: 1h

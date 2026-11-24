@@ -16,3 +16,7 @@ spec:
         kind: HelmRepository
         name: crossplane
         namespace: flux-system
+  values:
+    image:
+      repository: ghcr.io/crossplane/crossplane # {"$imagepolicy": "flux-system:crossplane:name"}
+      tag: v2.4.0 # {"$imagepolicy": "flux-system:crossplane:tag"}

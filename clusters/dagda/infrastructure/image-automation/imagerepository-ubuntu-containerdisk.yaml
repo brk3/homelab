@@ -1,0 +1,8 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: ubuntu-containerdisk
+  namespace: flux-system
+spec:
+  image: quay.io/containerdisks/ubuntu
+  interval: 1h

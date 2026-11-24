@@ -1,0 +1,8 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: kured
+  namespace: flux-system
+spec:
+  image: ghcr.io/kubereboot/kured
+  interval: 1h

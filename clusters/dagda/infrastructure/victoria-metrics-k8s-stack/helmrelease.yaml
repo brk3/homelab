@@ -26,6 +26,9 @@ spec:
             memory: 256Mi
     vmsingle:
       spec:
+        image:
+          repository: victoriametrics/victoria-metrics # {"$imagepolicy": "flux-system:victoria-metrics:name"}
+          tag: v1.148.0 # {"$imagepolicy": "flux-system:victoria-metrics:tag"}
         retentionPeriod: "3"
         resources:
           requests:
@@ -66,6 +69,9 @@ spec:
     #         memory: 500Mi
     vmagent:
       spec:
+        image:
+          repository: victoriametrics/vmagent # {"$imagepolicy": "flux-system:vmagent:name"}
+          tag: v1.148.0 # {"$imagepolicy": "flux-system:vmagent:tag"}
         resources:
           requests:
             cpu: 150m
@@ -74,6 +80,9 @@ spec:
             memory: 1000Mi
     vmalert:
       spec:
+        image:
+          repository: victoriametrics/vmalert # {"$imagepolicy": "flux-system:vmalert:name"}
+          tag: v1.148.0 # {"$imagepolicy": "flux-system:vmalert:tag"}
         resources:
           requests:
             cpu: 50m
@@ -123,6 +132,9 @@ spec:
         limits:
           memory: 128Mi
     victoria-metrics-operator:
+      image:
+        repository: victoriametrics/operator # {"$imagepolicy": "flux-system:victoria-metrics-operator:name"}
+        tag: v0.73.1 # {"$imagepolicy": "flux-system:victoria-metrics-operator:tag"}
       resources:
         requests:
           cpu: 20m

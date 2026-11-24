@@ -379,7 +379,7 @@ spec:
                       valueFrom:
                         fieldRef:
                             fieldPath: metadata.uid
-                  image: tailscale/k8s-operator:stable
+                  image: tailscale/k8s-operator:v1.104.7 # {"$imagepolicy": "flux-system:tailscale-operator"}
                   imagePullPolicy: Always
                   name: operator
                   volumeMounts:

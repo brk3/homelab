@@ -12,3 +12,9 @@ spec:
   chartRef:
     kind: OCIRepository
     name: envoy-gateway
+  values:
+    deployment:
+      envoyGateway:
+        image:
+          repository: docker.io/envoyproxy/gateway # {"$imagepolicy": "flux-system:envoy-gateway:name"}
+          tag: v1.8.3 # {"$imagepolicy": "flux-system:envoy-gateway:tag"}
